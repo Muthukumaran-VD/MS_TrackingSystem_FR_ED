@@ -170,19 +170,7 @@ body {
 }
 
 .user-details-container {
-  margin-top: 20px;
-}
-
-.section {
-  margin-bottom: 30px;
-}
-
-.section h3 {
-  margin-bottom: 10px;
-  font-size: 18px;
-  color: #333;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 5px;
+  margin-top: 15px;
 }
 
 .user-details-grid {
@@ -200,4 +188,35 @@ body {
   display: inline-block;
   width: 180px;
 }
+
+.user-details-grid input {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.section h3 {
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 5px;
+  cursor: pointer; /* Make the header clickable */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.arrow {
+  display: inline-block;
+  margin-left: 10px;
+  transition: transform 0.3s ease; /* Smooth transition for rotation */
+}
+
+.arrow.open {
+  transform: rotate(180deg); /* Rotate the arrow when open */
+}
+
 
