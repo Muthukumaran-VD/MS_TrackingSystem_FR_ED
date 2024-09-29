@@ -1,27 +1,38 @@
 import React, { useState } from 'react';
-import formatDate from '../../components/DateFormat';
-import logo from '../../assests/images/VD.png';
-import Mslogo from '../../assests/images/MS.png';
+import formatDate from '../../components/dateFormat/DateFormat';
+import { useLocation, useNavigate } from 'react-router-dom'; // Import useLocation and useNavigate
+import "./SingleUserView.css";
+import Logo from '../../components/logo/logo';
 
-function SingleUserView({ user, onBackClick }) {
+function SingleUserView() {
     const [isJobDetailsOpen, setIsJobDetailsOpen] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    // Get the user data from location state
+    const { user } = location.state || {};
+
+    // If no user data is available, show a message
+    if (!user) {
+        return <h2>No user data available. Please go back and select a user.</h2>;
+    }
 
     const toggleJobDetails = () => {
         setIsJobDetailsOpen(!isJobDetailsOpen);
     };
 
+    // Function to navigate back to the list view
+    const handleBackClick = () => {
+        navigate(-1); // Go back to the previous page
+    };
+
     return (
-        <div className="single-user-view">
-            <div className="header-container">
-                <img src={Mslogo} alt="MS Logo" className="MSlogo" />
-                <h2>Single User View</h2>
-                <img src={logo} alt="VueData Logo" className="Vuedatalogo" />
-            </div>
+        <div className="user-list">
+            <Logo />
             <div className='backbutton-right'>
-                <button className="backbutton" onClick={onBackClick}>Back to List</button>
+                <button className="backbutton" onClick={handleBackClick}>Back to List</button>
             </div>
             <div className="user-details-container">
-
                 {/* Background Details */}
                 <div className="section">
                     <h3>Background Details</h3>

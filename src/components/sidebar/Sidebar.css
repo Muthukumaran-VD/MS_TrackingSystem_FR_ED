@@ -1,0 +1,56 @@
+.sidenav {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #f4f4f4; /* Light grey background */
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidebar-name{
+  padding-top: 50px;
+}
+
+.sidebar-names{
+  margin-top: 40px;
+}
+
+.sidenav img {
+  max-width: 100%; /* Ensures the logo fits within the sidebar */
+  height: auto;    /* Maintains aspect ratio */
+  display: block;  /* Centers the logo */
+  margin: 0 auto;  /* Centers the logo horizontally */
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 20px; /* Adjusted font size for better visibility */
+  color: #818181; /* Default text color */
+  display: block;
+}
+
+.sidenav a:hover {
+  color: black; /* Text color on hover */
+}
+
+.logout {
+  margin-top: 400px; /* Push logout to the bottom */
+  padding: 20px 16px; /* Adds some padding for logout */
+}
+
+.logout a {
+  color: #818181; /* Same color as other links */
+}
+
+.logout a:hover {
+  color: black; /* Hover effect for logout link */
+}
+
+.logo{
+  margin-left: 90px;
+}
+
