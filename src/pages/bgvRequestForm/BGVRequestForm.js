@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './BGVRequestForm.css'; // Import the CSS file
 
 const BGVRequestForm = () => {
-    const [bgvEmail, setBgvEmail] = useState(''); // For manual email entry
     const [employees, setEmployees] = useState([]); // For the employee list
     const [mailTo, setMailTo] = useState(''); // For "Send To" email
     const [ccMail, setCcMail] = useState(''); // For "CC" email
