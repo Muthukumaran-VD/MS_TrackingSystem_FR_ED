@@ -1,5 +1,5 @@
 {
-  "name": "applymsaccount",
+  "name": "MicrosoftAccountTrackingSystem",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
