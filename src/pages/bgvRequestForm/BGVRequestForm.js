@@ -25,15 +25,15 @@ const BGVRequestForm = () => {
     }, []);
 
     // Handle BGV email submission when entered manually
-    const handleBgvSubmit = (e) => {
-        e.preventDefault();
-        if (!bgvEmail) {
-            console.log('Please enter an email!');
-            return;
-        }
-        console.log('BGV Request Sent For:', bgvEmail);
-        setBgvEmail('');
-    };
+    // const handleBgvSubmit = (e) => {
+    //     e.preventDefault();
+    //     if (!bgvEmail) {
+    //         console.log('Please enter an email!');
+    //         return;
+    //     }
+    //     console.log('BGV Request Sent For:', bgvEmail);
+    //     setBgvEmail('');
+    // };
 
     // Handle sending mail when an employee's button is clicked
     const handleMailToEmployee = (email) => {
