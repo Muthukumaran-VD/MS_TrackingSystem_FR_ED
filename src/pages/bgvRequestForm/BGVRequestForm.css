@@ -1,0 +1,117 @@
+.header {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.form-component{
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 5px;
+    width: 530px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 8px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.input-field {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+.input-field:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px; /* Add some space above the buttons */
+}
+
+.btn {
+    padding: 8px 12px;
+    background-color: #007bff; /* Blue color for Send Email button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 48%; /* Adjust width to fit two buttons */
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.preview-btn {
+    background-color: #28a745; /* Green color for preview button */
+}
+
+.preview-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.employee-list {
+    margin-top: 3px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.employee-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.employee-list th,
+.employee-list td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.employee-list th {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.employee-list td {
+    font-size: 14px;
+    color: #333;
+}
+
+.employee-list button {
+    background-color: #007bff; /* Blue color for employee mail button */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.employee-list button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+
