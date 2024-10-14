@@ -24,17 +24,6 @@ const BGVRequestForm = () => {
         setAvailableEmails(dummyEmails);
     }, []);
 
-    // Handle BGV email submission when entered manually
-    // const handleBgvSubmit = (e) => {
-    //     e.preventDefault();
-    //     if (!bgvEmail) {
-    //         console.log('Please enter an email!');
-    //         return;
-    //     }
-    //     console.log('BGV Request Sent For:', bgvEmail);
-    //     setBgvEmail('');
-    // };
-
     // Handle sending mail when an employee's button is clicked
     const handleMailToEmployee = (email) => {
         setMailTo(email); // Set "Send To" field with employee's email
@@ -65,19 +54,7 @@ const BGVRequestForm = () => {
                 <div className="form-container">
                     <form onSubmit={handleMailSubmit}>
                         <div className="form-group">
-                            <label htmlFor="bgvEmail">Manually Add Email (if not listed):</label>
-                            <input
-                                type="email"
-                                id="bgvEmail"
-                                value={bgvEmail}
-                                onChange={(e) => setBgvEmail(e.target.value)}
-                                placeholder="Enter email if employee not listed"
-                                className="input-field"
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="mailTo">Send To:</label>
+                            <label htmlFor="mailTo">Send To Employee:</label>
                             <input
                                 type="email"
                                 list="availableEmails"
@@ -113,10 +90,6 @@ const BGVRequestForm = () => {
                             <button type="submit" className="btn">Send Email</button>
                         </div>
                     </form>
-                </div>
-
-                <div className="form-container">
-                    <h1>Form Data preview</h1>
                 </div>
             </div>
             {/* Employee List */}
