@@ -6,6 +6,7 @@ import Sidebar from './components/sidebar/Sidebar';
 import UserList from './pages/userList/UserList'; 
 import BGVRequestForm from './pages/bgvRequestForm/BGVRequestForm';
 import Dashboard from './pages/dashboard/Dashboard';
+import BGVRequestEmployeeForm from './pages/bgvEmployeeForm/BGVEmployeeForm'
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             <Route path="/employees" element={<UserList />} /> 
             <Route path="/bgv-request" element={<BGVRequestForm />} /> 
             <Route path="/user/:userId" element={<SingleUserView />} /> 
+            <Route path="/bgv-employeeform" element={<BGVRequestEmployeeForm />} />
           </Routes>
         </div>
       </div>

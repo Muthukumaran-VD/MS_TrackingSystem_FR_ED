@@ -11,10 +11,7 @@ const Sidebar = () => {
         <Link to="/">Dashboard</Link>
         <Link to="/employees">Listing Employee</Link>
         <Link to="/bgv-request">BGV Request Form</Link> {/* New Route for BGV Request */}
-        <Link to="/employee-bgv">Employee BGV Form</Link>
-      </div>
-      <div className="logout">
-        <Link to="/logout">Logout</Link>
+        <Link to="/bgv-employeeform">Employee BGV Form</Link>
       </div>
     </div>
   );

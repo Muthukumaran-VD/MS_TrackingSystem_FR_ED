@@ -101,7 +101,7 @@ const convertToCSV = (users) => {
 
 async function handleExport() {
   try {
-    const res = await fetch(`http://localhost:5001/users?all=true`);
+    const res = await fetch(`http://localhost:8000/users?all=true`);
     const data = await res.json();
     const csvData = convertToCSV(data.users);
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });

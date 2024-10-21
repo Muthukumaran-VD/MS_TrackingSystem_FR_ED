@@ -22,7 +22,7 @@ function UserList() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await fetch(`mtsbackend-eq0rilqd.b4a.run/users?page=${currentPage}&limit=${usersPerPage}&search=${encodeURIComponent(searchQuery)}`);
+                const res = await fetch(`http://localhost:8000/users?page=${currentPage}&limit=${usersPerPage}&search=${encodeURIComponent(searchQuery)}`);
                 const data = await res.json();
                 setUsers(data.users);
                 setTotalPages(data.totalPages);

@@ -6,6 +6,7 @@ const BGVRequestForm = () => {
     const [mailTo, setMailTo] = useState(''); // For "Send To" email
     const [ccMail, setCcMail] = useState(''); // For "CC" email
     const [availableEmails, setAvailableEmails] = useState([]); // For email suggestions
+    const [loading, setLoading] = useState(false); // To handle loading state
 
     // Dummy data for employees
     useEffect(() => {
@@ -29,18 +30,40 @@ const BGVRequestForm = () => {
     };
 
     // Handle mail submission from form
-    const handleMailSubmit = (e) => {
+    const handleMailSubmit = async (e) => {
         e.preventDefault();
-        console.log('Mail sent to:', mailTo);
-        console.log('CC:', ccMail);
-        setMailTo(''); // Clear the fields after submitting
-        setCcMail('');
-    };
+        setLoading(true);
 
-    // Handle preview action
-    const handlePreview = () => {
-        console.log('Preview email to:', mailTo);
-        console.log('CC:', ccMail);
+        const emailData = {
+            to: mailTo,
+            cc: ccMail,
+        };
+
+        try {
+            // Replace with your backend API endpoint
+            const response = await fetch('http://localhost:8000/users/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(emailData),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Email data sent successfully:', result);
+                alert('Email data sent successfully!'); // Alert on successful email send
+            } else {
+                throw new Error('Failed to send email data');
+            }
+        } catch (error) {
+            console.error('Error sending email data:', error);
+            alert('Failed to send email data.');
+        } finally {
+            setMailTo(''); // Clear the fields after submitting
+            setCcMail('');
+            setLoading(false); // Reset loading state
+        }
     };
 
     return (
@@ -85,8 +108,9 @@ const BGVRequestForm = () => {
                         </div>
 
                         <div className="button-group">
-                            <button type="button" className="btn preview-btn" onClick={handlePreview}>Preview</button>
-                            <button type="submit" className="btn">Send Email</button>
+                            <button type="submit" className="btn" disabled={loading}>
+                                {loading ? 'Sending...' : 'Send Email'}
+                            </button>
                         </div>
                     </form>
                 </div>

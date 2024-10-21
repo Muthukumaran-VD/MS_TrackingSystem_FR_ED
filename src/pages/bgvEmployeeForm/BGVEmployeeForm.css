@@ -1,0 +1,85 @@
+/* BGB Form Container */
+.bgb-form-container {
+    background-color: #ffffff;
+    margin-top: 5px;
+}
+
+/* Form Title */
+.bgb-form-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form Layout */
+.bgb-form-layout {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+/* Left and Right Form Columns */
+.bgb-form-column {
+    width: 48%;
+}
+
+/* Form Group */
+.bgb-form-group {
+    margin-bottom: 10px;
+}
+
+/* Labels */
+.bgb-form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Input Fields */
+.bgb-form-input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* File Input */
+.bgb-form-file-input {
+    padding: 5px;
+}
+
+/* Button */
+.bgb-form-submit {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 10%;
+}
+
+/* Button Hover Effect */
+.bgb-form-submit:hover {
+    background-color: #45a049;
+}
+
+/* Input Field Focus Effect */
+.bgb-form-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .bgb-form-layout {
+        flex-direction: column;
+    }
+
+    .bgb-form-column {
+        width: 100%;
+    }
+}
