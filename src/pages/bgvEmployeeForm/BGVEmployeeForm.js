@@ -42,7 +42,7 @@ const BGBRequestEmployeeForm = () => {
 
     return (
         <div className="bgb-form-container">
-            <h2 className="bgb-form-title">BGB Request Employee Form</h2>
+            <h2 className="bgb-form-title">BGV Request Employee Form</h2>
             <form onSubmit={handleSubmit}>
                 <div className="bgb-form-layout">
                     {/* Left Column */}
