@@ -1,7 +1,24 @@
-/* src/pages/Login.css */
+/* Full viewport height and centering using Flexbox */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 150px;
+  align-items: center;
+  height: 80vh;
+  position: relative;
+}
+
+/* Styling for the login container */
 .login-container {
   max-width: 400px;
-  margin: 5rem auto;
+  width: 100%;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -9,11 +26,13 @@
   text-align: center;
 }
 
+/* Header styling */
 .login-container h2 {
   margin-bottom: 1.5rem;
   color: #333;
 }
 
+/* Form styling */
 .login-form .form-group {
   margin-bottom: 1rem;
   text-align: left;
@@ -36,6 +55,7 @@
   box-sizing: border-box;
 }
 
+/* Error and success message styling */
 .login-form .error-message {
   color: #d9534f;
   font-size: 0.9rem;
@@ -48,6 +68,7 @@
   margin-top: 0.5rem;
 }
 
+/* Button styling */
 .login-form .submit-btn {
   width: 100%;
   padding: 0.75rem;
