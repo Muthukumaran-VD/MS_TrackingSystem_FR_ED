@@ -73,6 +73,7 @@ function UserList() {
                     <div className="user-data">Resource Name</div>
                     <div className="user-data">V-Account</div>
                     <div className="user-data">Project</div>
+                    <div className="user-data">VD MailId</div>
                     <div className="user-data">Client Partner</div>
                     <div className="user-data">Client Manager</div>
                     <div className="user-data">Work Start Date</div>
@@ -93,7 +94,7 @@ function UserList() {
                             <div className="user-data v-dash">
                                 <div className="email-container">
                                     <span className="truncated-email">
-                                        {user.V_Account.split('@')[0]}
+                                        {user.V_Account && user.V_Account.split('@')[0]}
                                     </span>
                                     <div className="tooltip">
                                         <span>{user.V_Account}</span>
@@ -107,6 +108,7 @@ function UserList() {
                                 </div>
                             </div>
                             <div className="user-data">{user.Project}</div>
+                            <div className="user-data">{user.VueData_Email}</div>
                             <div className="user-data">{user.Client_Partner}</div>
                             <div className="user-data">{user.Client_Manager}</div>
                             <div className="user-data">

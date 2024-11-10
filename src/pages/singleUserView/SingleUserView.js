@@ -1,22 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import formatDate from '../../components/dateFormat/DateFormat';
 import { useLocation, useNavigate } from 'react-router-dom'; // Import useLocation and useNavigate
-import "./SingleUserView.css";
+import axios from 'axios'; // Import axios for API requests
+import './SingleUserView.css';
 import Logo from '../../components/logo/logo';
 
 function SingleUserView() {
     const [isJobDetailsOpen, setIsJobDetailsOpen] = useState(false);
+    const [userData, setUserData] = useState({}); // State to store user data
+    const [initialUserData, setInitialUserData] = useState({}); // State to store initial user data for comparison
     const location = useLocation();
     const navigate = useNavigate();
 
     // Get the user data from location state
     const { user } = location.state || {};
 
+    // Initialize user data inside useEffect unconditionally
+    useEffect(() => {
+        if (user) {
+            setUserData(user); // Initialize the form with user data
+            setInitialUserData(user); // Save the initial data for comparison
+        }
+    }, [user]); // Effect depends on the 'user' object
+
     // If no user data is available, show a message
     if (!user) {
         return <h2>No user data available. Please go back and select a user.</h2>;
     }
 
+    // Toggle job details visibility
     const toggleJobDetails = () => {
         setIsJobDetailsOpen(!isJobDetailsOpen);
     };
@@ -26,22 +38,68 @@ function SingleUserView() {
         navigate(-1); // Go back to the previous page
     };
 
+    // Function to handle form submission and update data
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        // Find the modified fields by comparing current userData and initialUserData
+        const updatedFields = Object.keys(userData).reduce((acc, key) => {
+            if (userData[key] !== initialUserData[key]) {
+                acc[key] = userData[key];
+            }
+            return acc;
+        }, {});
+
+        // If there are no changes, avoid sending an update request
+        if (Object.keys(updatedFields).length === 0) {
+            console.log('No changes made.');
+            return;
+        }
+
+        // Send updated data to the backend API
+        try {
+            const response = await axios.put(
+                `http://localhost:8000/users/user/${userData.ID}`,
+                updatedFields // Send only updated fields to the backend
+            );
+            console.log('User updated successfully:', response.data);
+            setInitialUserData(userData); // Update initial data after successful submission
+        } catch (error) {
+            console.error('Error updating user:', error);
+        }
+    };
+
+    // Handle input changes and update the state with new values
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setUserData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
     return (
         <div className="user-list">
             <Logo />
-            <div className='backbutton-right'>
-                <button className="backbutton" onClick={handleBackClick}>Back to List</button>
+            <div className='backsubmit-button'>
+                <div className='backbutton-right'>
+                    <button className="backbutton" onClick={handleBackClick}>Back to List</button>
+                </div>
+                {/* Submit Button */}
+                <button className="submit-button" onClick={handleSubmit}>
+                    Save Changes
+                </button>
             </div>
             <div className="user-details-container">
                 {/* Background Details */}
                 <div className="section">
                     <h3>Background Details</h3>
                     <div className="user-details-grid">
-                        <p><span>BGV ID</span> <input value={user.BGV_ID} readOnly /></p>
-                        <p><span>BGV Submission Date</span> <input value={user.BGV_Submission_Date ? formatDate(user.BGV_Submission_Date) : 'No Date Provided'} readOnly /></p>
-                        <p><span>BGV Completion Date</span> <input value={user.BGV_Completion_Date ? formatDate(user.BGV_Completion_Date) : 'No Date Provided'} readOnly /></p>
-                        <p><span>Legal Name</span> <input value={user.Legal_Name} readOnly /></p>
-                        <p><span>Previous MS V-Account</span> <input value={user.Previous_MS_V_Account} readOnly /></p>
+                        <p><span>BGV ID</span> <input name="BGV_ID" value={userData.BGV_ID} onChange={handleInputChange} /></p>
+                        <p><span>BGV Submission Date</span> <input name="BGV_Submission_Date" value={userData.BGV_Submission_Date ? formatDate(userData.BGV_Submission_Date) : ''} onChange={handleInputChange} /></p>
+                        <p><span>BGV Completion Date</span> <input name="BGV_Completion_Date" value={userData.BGV_Completion_Date ? formatDate(userData.BGV_Completion_Date) : ''} onChange={handleInputChange} /></p>
+                        <p><span>Legal Name</span> <input name="Legal_Name" value={userData.Legal_Name} onChange={handleInputChange} /></p>
+                        <p><span>Previous MS V-Account</span> <input name="Previous_MS_V_Account" value={userData.Previous_MS_V_Account} onChange={handleInputChange} /></p>
                     </div>
                 </div>
 
@@ -49,15 +107,15 @@ function SingleUserView() {
                 <div className="section">
                     <h3>Client Details</h3>
                     <div className="user-details-grid">
-                        <p><span>Client Partner</span> <input value={user.Client_Partner} readOnly /></p>
-                        <p><span>Client Manager</span> <input value={user.Client_Manager} readOnly /></p>
-                        <p><span>Client Lead</span> <input value={user.Client_Lead} readOnly /></p>
-                        <p><span>Client Partner Email</span> <input value={user.Client_Partner_Email} readOnly /></p>
-                        <p><span>Client Manager Email</span> <input value={user.Client_Manager_Email} readOnly /></p>
-                        <p><span>Client Lead Email</span> <input value={user.Client_Lead_Email} readOnly /></p>
-                        <p><span>Client Partner Location</span> <input value={user.Client_Partner_Location} readOnly /></p>
-                        <p><span>Client Manager Location</span> <input value={user.Client_Manager_Location} readOnly /></p>
-                        <p><span>Client Lead Location</span> <input value={user.Client_Lead_Location} readOnly /></p>
+                        <p><span>Client Partner</span> <input name="Client_Partner" value={userData.Client_Partner} onChange={handleInputChange} /></p>
+                        <p><span>Client Manager</span> <input name="Client_Manager" value={userData.Client_Manager} onChange={handleInputChange} /></p>
+                        <p><span>Client Lead</span> <input name="Client_Lead" value={userData.Client_Lead} onChange={handleInputChange} /></p>
+                        <p><span>Client Partner Email</span> <input name="Client_Partner_Email" value={userData.Client_Partner_Email} onChange={handleInputChange} /></p>
+                        <p><span>Client Manager Email</span> <input name="Client_Manager_Email" value={userData.Client_Manager_Email} onChange={handleInputChange} /></p>
+                        <p><span>Client Lead Email</span> <input name="Client_Lead_Email" value={userData.Client_Lead_Email} onChange={handleInputChange} /></p>
+                        <p><span>Client Partner Location</span> <input name="Client_Partner_Location" value={userData.Client_Partner_Location} onChange={handleInputChange} /></p>
+                        <p><span>Client Manager Location</span> <input name="Client_Manager_Location" value={userData.Client_Manager_Location} onChange={handleInputChange} /></p>
+                        <p><span>Client Lead Location</span> <input name="Client_Lead_Location" value={userData.Client_Lead_Location} onChange={handleInputChange} /></p>
                     </div>
                 </div>
 
@@ -65,9 +123,9 @@ function SingleUserView() {
                 <div className="section">
                     <h3>Billing Details</h3>
                     <div className="user-details-grid">
-                        <p><span>Onsite / Offshore</span> <input value={user.OnSite_Offshore} readOnly /></p>
-                        <p><span>Resource Status</span> <input value={user.Resource_Status} readOnly /></p>
-                        <p><span>Billing Status</span> <input value={user.Billing_Status} readOnly /></p>
+                        <p><span>Onsite / Offshore</span> <input name="OnSite_Offshore" value={userData.OnSite_Offshore} onChange={handleInputChange} /></p>
+                        <p><span>Resource Status</span> <input name="Resource_Status" value={userData.Resource_Status} onChange={handleInputChange} /></p>
+                        <p><span>Billing Status</span> <input name="Billing_Status" value={userData.Billing_Status} onChange={handleInputChange} /></p>
                     </div>
                 </div>
 
@@ -75,15 +133,15 @@ function SingleUserView() {
                 <div className="section">
                     <h3>Personal Details</h3>
                     <div className="user-details-grid">
-                        <p><span>VueData Employee ID</span> <input value={user.VueData_Employee_ID} readOnly /></p>
-                        <p><span>VueData Email</span> <input value={user.VueData_Email} readOnly /></p>
-                        <p><span>Phone Number</span> <input value={user.Phone_Number} readOnly /></p>
-                        <p><span>First Name</span> <input value={user.First_Name} readOnly /></p>
-                        <p><span>Middle Name</span> <input value={user.Middle_Name} readOnly /></p>
-                        <p><span>Last Name</span> <input value={user.Last_Name} readOnly /></p>
-                        <p><span>Primary Skills</span> <input value={user.Primary_Skills} readOnly /></p>
-                        <p><span>Secondary Skills</span> <input value={user.Secondary_Skills} readOnly /></p>
-                        <p><span>Employment Type</span> <input value={user.Employment_Type} readOnly /></p>
+                        <p><span>VueData Employee ID</span> <input name="VueData_Employee_ID" value={userData.VueData_Employee_ID} onChange={handleInputChange} /></p>
+                        <p><span>VueData Email</span> <input name="VueData_Email" value={userData.VueData_Email} onChange={handleInputChange} /></p>
+                        <p><span>Phone Number</span> <input name="Phone_Number" value={userData.Phone_Number} onChange={handleInputChange} /></p>
+                        <p><span>First Name</span> <input name="First_Name" value={userData.First_Name} onChange={handleInputChange} /></p>
+                        <p><span>Middle Name</span> <input name="Middle_Name" value={userData.Middle_Name} onChange={handleInputChange} /></p>
+                        <p><span>Last Name</span> <input name="Last_Name" value={userData.Last_Name} onChange={handleInputChange} /></p>
+                        <p><span>Primary Skills</span> <input name="Primary_Skills" value={userData.Primary_Skills} onChange={handleInputChange} /></p>
+                        <p><span>Secondary Skills</span> <input name="Secondary_Skills" value={userData.Secondary_Skills} onChange={handleInputChange} /></p>
+                        <p><span>Employment Type</span> <input name="Employment_Type" value={userData.Employment_Type} onChange={handleInputChange} /></p>
                     </div>
                 </div>
 
@@ -95,18 +153,18 @@ function SingleUserView() {
                     </h3>
                     {isJobDetailsOpen && (
                         <div className="user-details-grid">
-                            <p><span>PO Number</span> <input value={user.PO_Number} readOnly /></p>
-                            <p><span>Position Type</span> <input value={user.Position_Type} readOnly /></p>
-                            <p><span>Request ID</span> <input value={user.Request_ID} readOnly /></p>
-                            <p><span>ECA Submission Date</span> <input value={user.ECA_Submission_Date ? formatDate(user.ECA_Submission_Date) : 'No Date Provided'} readOnly /></p>
-                            <p><span>ECA Completion Date</span> <input value={user.ECA_Completion_Date ? formatDate(user.ECA_Completion_Date) : 'No Date Provided'} readOnly /></p>
-                            <p><span>Work Start Date</span> <input value={user.Work_Start_Date ? formatDate(user.Work_Start_Date) : 'No Date Provided'} readOnly /></p>
-                            <p><span>MS Employee ID</span> <input value={user.MS_Employee_ID} readOnly /></p>
-                            <p><span>V-Account</span> <input value={user.V_Account} readOnly /></p>
-                            <p><span>Resource Name</span> <input value={user.Resource_Name} readOnly /></p>
-                            <p><span>Expiry Date</span> <input value={user.Expiry_Date ? formatDate(user.Expiry_Date) : 'No Date Provided'} readOnly /></p>
-                            <p><span>Max Policy Expiry Date</span> <input value={user.Max_Policy_Expiry_Date ? formatDate(user.Max_Policy_Expiry_Date) : 'No Date Provided'} readOnly /></p>
-                            <p><span>Work End Date</span> <input value={user.Work_End_Date ? formatDate(user.Work_End_Date) : 'No Date Provided'} readOnly /></p>
+                            <p><span>PO Number</span> <input name="PO_Number" value={userData.PO_Number} onChange={handleInputChange} /></p>
+                            <p><span>Position Type</span> <input name="Position_Type" value={userData.Position_Type} onChange={handleInputChange} /></p>
+                            <p><span>Request ID</span> <input name="Request_ID" value={userData.Request_ID} onChange={handleInputChange} /></p>
+                            <p><span>ECA Submission Date</span> <input name="ECA_Submission_Date" value={userData.ECA_Submission_Date ? formatDate(userData.ECA_Submission_Date) : ''} onChange={handleInputChange} /></p>
+                            <p><span>ECA Completion Date</span> <input name="ECA_Completion_Date" value={userData.ECA_Completion_Date ? formatDate(userData.ECA_Completion_Date) : ''} onChange={handleInputChange} /></p>
+                            <p><span>Work Start Date</span> <input name="Work_Start_Date" value={userData.Work_Start_Date ? formatDate(userData.Work_Start_Date) : ''} onChange={handleInputChange} /></p>
+                            <p><span>MS Employee ID</span> <input name="MS_Employee_ID" value={userData.MS_Employee_ID} onChange={handleInputChange} /></p>
+                            <p><span>V-Account</span> <input name="V_Account" value={userData.V_Account} onChange={handleInputChange} /></p>
+                            <p><span>Resource Name</span> <input name="Resource_Name" value={userData.Resource_Name} onChange={handleInputChange} /></p>
+                            <p><span>Expiry Date</span> <input name="Expiry_Date" value={userData.Expiry_Date ? formatDate(userData.Expiry_Date) : ''} onChange={handleInputChange} /></p>
+                            <p><span>Max Policy Expiry Date</span> <input name="Max_Policy_Expiry_Date" value={userData.Max_Policy_Expiry_Date ? formatDate(userData.Max_Policy_Expiry_Date) : ''} onChange={handleInputChange} /></p>
+                            <p><span>Work End Date</span> <input name="Work_End_Date" value={userData.Work_End_Date ? formatDate(userData.Work_End_Date) : ''} onChange={handleInputChange} /></p>
                         </div>
                     )}
                 </div>
@@ -116,3 +174,4 @@ function SingleUserView() {
 }
 
 export default SingleUserView;
+
