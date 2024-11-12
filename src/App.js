@@ -10,6 +10,7 @@ import Dashboard from './pages/dashboard/Dashboard';
 import BGVRequestEmployeeForm from './pages/bgvEmployeeForm/BGVEmployeeForm';
 import SignUp from './pages/signup/Signup';
 import Login from './pages/login/Login';
+import EmployeeRequestStatus from './pages/masterdata/EmployeeStatusupdating/EmployeeStatusUpdating';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Track login status
@@ -39,6 +40,7 @@ function App() {
             <Route path="/bgv-request" element={<ProtectedRoute><BGVRequestForm /></ProtectedRoute>} />
             <Route path="/user/:userId" element={<ProtectedRoute><SingleUserView /></ProtectedRoute>} />
             <Route path="/bgv-employeeform" element={<ProtectedRoute><BGVRequestEmployeeForm /></ProtectedRoute>} />
+            <Route path="/employee-request-status" element={<ProtectedRoute><EmployeeRequestStatus /></ProtectedRoute>} />
           </Routes>
         </div>
       </div>

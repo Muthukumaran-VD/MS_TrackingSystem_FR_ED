@@ -36,7 +36,7 @@ function Pagination({ currentPage, totalPages, paginate }) {
           <button
             onClick={() => paginate(currentPage + 1)}
             className="pagination-button"
-            disabled={currentPage === totalPages}
+            // disabled={currentPage === totalPages}
           >
             &gt;
           </button>

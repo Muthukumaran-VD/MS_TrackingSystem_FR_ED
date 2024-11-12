@@ -79,13 +79,14 @@ body {
   .user-row:hover {
     background-color: #f1f1f1;
   }
-  
   .user-data {
     flex: 1;
-    padding: 0 10px;
+    padding: 0 8px; /* Reduced padding for tighter alignment */
     text-align: left;
     word-break: break-word;
-  }
+    min-width: 80px; /* Set a minimum width for better control */
+    max-width: 150px; /* Optional: cap width for narrow screens */
+}
   
   .viewbutton {
     padding: 8px 12px;
@@ -164,6 +165,47 @@ body {
   .Vuedatalogo {
     width: 120px;
   }
+
+  /* Dropdown styling */
+.user-data select {
+  width: 100%;
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  font-size: inherit;
+}
+
+/* Ensures the header row and user rows align */
+.user-row.header .user-data {
+  font-weight: bold;
+  text-align: left;
+  padding: 6px 8px;
+}
+
+/* Override padding for the main container to center the content */
+.user-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  margin: 3px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fafafa;
+}
+
+/* Optional: Reduce font size for a compact view */
+.user-data, .user-data select {
+  font-size: 13px;
+}
   
   
   
