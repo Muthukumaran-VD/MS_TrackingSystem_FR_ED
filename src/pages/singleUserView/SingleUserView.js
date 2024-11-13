@@ -10,6 +10,7 @@ function SingleUserView() {
     const [userData, setUserData] = useState({}); // State to store user data
     const [initialUserData, setInitialUserData] = useState({}); // State to store initial user data for comparison
     const location = useLocation();
+    const [successMessage, setSuccessMessage] = useState(''); // State for success message
     const navigate = useNavigate();
 
     // Get the user data from location state
@@ -42,7 +43,6 @@ function SingleUserView() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Find the modified fields by comparing current userData and initialUserData
         const updatedFields = Object.keys(userData).reduce((acc, key) => {
             if (userData[key] !== initialUserData[key]) {
                 acc[key] = userData[key];
@@ -50,20 +50,20 @@ function SingleUserView() {
             return acc;
         }, {});
 
-        // If there are no changes, avoid sending an update request
         if (Object.keys(updatedFields).length === 0) {
             console.log('No changes made.');
             return;
         }
 
-        // Send updated data to the backend API
         try {
             const response = await axios.put(
                 `http://localhost:8000/users/user/${userData.ID}`,
-                updatedFields // Send only updated fields to the backend
+                updatedFields
             );
             console.log('User updated successfully:', response.data);
-            setInitialUserData(userData); // Update initial data after successful submission
+            setInitialUserData(userData);
+            setSuccessMessage('User updated successfully!');
+            setTimeout(() => setSuccessMessage(''), 3000); // Hide message after 3 seconds
         } catch (error) {
             console.error('Error updating user:', error);
         }
@@ -90,6 +90,8 @@ function SingleUserView() {
                     Save Changes
                 </button>
             </div>
+            {/* Success Message */}
+            {successMessage && <div className="success-message">{successMessage}</div>}
             <div className="user-details-container">
                 {/* Background Details */}
                 <div className="section">

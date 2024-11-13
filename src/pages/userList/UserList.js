@@ -10,7 +10,6 @@ import Logo from '../../components/logo/logo';
 
 function UserList() {
     const [users, setUsers] = useState([]);
-    const [statuses, setStatuses] = useState([]); // For storing status options
     const [currentPage, setCurrentPage] = useState(1);
     const [usersPerPage] = useState(8);
     const [totalPages, setTotalPages] = useState(0);
@@ -21,35 +20,19 @@ function UserList() {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     useEffect(() => {
-        // Fetching users data
         const fetchUsers = async () => {
             try {
                 const res = await fetch(`http://localhost:8000/users?page=${currentPage}&limit=${usersPerPage}&search=${encodeURIComponent(searchQuery)}`);
                 const data = await res.json();
+                console.log(data);
                 setUsers(data.users);
                 setTotalPages(data.totalPages);
             } catch (err) {
                 console.error(err);
             }
         };
-
         fetchUsers();
     }, [currentPage, usersPerPage, searchQuery]);
-
-    useEffect(() => {
-        // Fetching statuses for dropdown
-        const fetchStatuses = async () => {
-            try {
-                const res = await fetch('http://localhost:8000/users/statuses');
-                const data = await res.json();
-                setStatuses(data); // Assuming the response is an array of status options
-            } catch (err) {
-                console.error(err);
-            }
-        };
-
-        fetchStatuses();
-    }, []);
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
@@ -66,15 +49,9 @@ function UserList() {
         setTimeout(() => setCopiedEmail(''), 2000);
     };
 
-    const handleStatusChange = (userId, newStatus) => {
-        // You can implement a function here to handle the change
-        // and send an update to the backend if needed
-        console.log(`Status for user ${userId} changed to ${newStatus}`);
-    };
-
     return (
         <div className="user-list">
-            <Logo />
+            <Logo/>
             <div className='search-export'>
                 <input
                     type="text"
@@ -92,7 +69,6 @@ function UserList() {
             <div className="user-table">
                 <div className="user-row header">
                     <div className="user-data">BGV ID</div>
-                    <div className="user-data">Request ID</div>
                     <div className="user-data">Resource Name</div>
                     <div className="user-data">V-Account</div>
                     <div className="user-data">Project</div>
@@ -101,7 +77,7 @@ function UserList() {
                     <div className="user-data">Work Start Date</div>
                     <div className="user-data">Expiry Date</div>
                     <div className="user-data">Max Policy Expiry Date</div>
-                    <div className="user-data">BGV Request status</div>
+                    <div className="user-data">Status</div>
                     <div className="user-data">Action</div>
                 </div>
 
@@ -109,7 +85,6 @@ function UserList() {
                     users.map((user, index) => (
                         <div className="user-row" key={index}>
                             <div className="user-data">{user.BGV_ID}</div>
-                            <div className="user-data">{user.Request_ID}</div>
                             <div className="user-data">{user.Resource_Name}</div>
                             <div className="user-data v-dash">
                                 <div className="email-container">
@@ -139,19 +114,7 @@ function UserList() {
                             <div className="user-data">
                                 {user.Max_Policy_Expiry_Date ? formatDate(user.Max_Policy_Expiry_Date) : 'No Date Provided'}
                             </div>
-                            <div className="user-data">
-                                <select
-                                    value={user.BGV_Request_status}
-                                    onChange={(e) => handleStatusChange(user.BGV_ID, e.target.value)}
-                                >
-                                    {statuses.map((status) => (
-                                        <option key={status.status_id} value={status.status_id}>
-                                            {status.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
+                            <div className="user-data">{user.BGV_Request_status}</div>
                             <div className="user-data">
                                 <button className="viewbutton" onClick={() => handleViewClick(user)}>
                                     <FontAwesomeIcon icon={faEye} />
