@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './BGVRequestForm.css';
+import axios from 'axios';
 
 const BGVRequestForm = () => {
     const [mailTo, setMailTo] = useState('');
     const [ccMail, setCcMail] = useState('');
     const [loading, setLoading] = useState(false);
+    const [emailList, setEmailList] = useState([]);
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -21,6 +23,24 @@ const BGVRequestForm = () => {
         teamProject: '',
         subGeo: '',
     });
+
+    // Fetch email IDs from the backend when the component mounts
+    useEffect(() => {
+        const fetchEmailIds = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/users/emails');
+                const data = response.data;
+                console.log(data);
+                if (data && data.emails) {
+                    setEmailList(data.emails); // Assuming the response contains emails in a property called 'emails'
+                }
+            } catch (error) {
+                console.error('Failed to fetch email IDs', error);
+            }
+        };
+
+        fetchEmailIds();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -78,6 +98,9 @@ const BGVRequestForm = () => {
             setLoading(false);
         }
     };
+
+    // Filter out the selected mailTo email from the CC email list
+    const filteredEmailList = emailList.filter(email => email !== mailTo);
 
     return (
         <div>
@@ -146,11 +169,35 @@ const BGVRequestForm = () => {
                     </div>
                     <div className="form-group">
                         <label>Send To Employee:</label>
-                        <input type="email" value={mailTo} onChange={(e) => setMailTo(e.target.value)} placeholder="Enter or select email" required className="input-field" />
+                        <select
+                            value={mailTo}
+                            onChange={(e) => setMailTo(e.target.value)}
+                            className="input-field"
+                            required
+                        >
+                            <option value="">Select an email</option>
+                            {emailList.map((emailObj, index) => (
+                                <option key={index} value={emailObj.mailTo}>
+                                    {emailObj.mailTo} {/* Render the mailTo property here */}
+                                </option>
+                            ))}
+                        </select>
                     </div>
+
                     <div className="form-group">
                         <label>CC:</label>
-                        <input type="email" value={ccMail} onChange={(e) => setCcMail(e.target.value)} placeholder="Enter CC email" className="input-field" />
+                        <select
+                            value={ccMail}
+                            onChange={(e) => setCcMail(e.target.value)}
+                            className="input-field"
+                        >
+                            <option value="">Select a CC email</option>
+                            {filteredEmailList.map((emailObj, index) => (
+                                <option key={index} value={emailObj.mailTo}>
+                                    {emailObj.mailTo} {/* Render the mailTo property here */}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="button-group">
                         <button type="submit" className="btn-green" disabled={loading}>

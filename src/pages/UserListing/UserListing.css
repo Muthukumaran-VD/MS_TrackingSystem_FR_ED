@@ -1,0 +1,187 @@
+/* Logo styling */
+.user-listing-logo {
+    margin-bottom: 20px;
+}
+
+/* Success message */
+.user-listing-success-message {
+    color: green;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #e6ffed;
+    border: 1px solid #a3dca3;
+    border-radius: 5px;
+}
+
+/* Search and export section */
+.user-listing-search-export {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.user-listing-search-box {
+    padding: 8px;
+    font-size: 14px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Table styling */
+.user-listing-table {
+    overflow-x: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-listing-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-listing-header-row {
+    background-color: #e0e0e0;
+    color: black;
+    font-weight: bold;
+    text-align: left;
+
+}
+
+.user-listing-header-data,
+.user-listing-header-data-status,
+.user-listing-data,
+.user-listing-data-status {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Table row styling */
+.user-listing-row:hover {
+    background-color: #f9f9f9;
+}
+
+.user-listing-data {
+    color: #333;
+}
+
+.user-listing-data-status {
+    text-align: center;
+}
+
+/* Dropdown styling */
+.user-listing-dropdown-status {
+    padding: 6px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.user-listing-dropdown-status:focus {
+    outline: none;
+    border-color: #0073e6;
+}
+
+/* No data message */
+.user-listing-no-data {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Pagination component styling */
+.user-listing-pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.user-listing-pagination button {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #0073e6;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.user-listing-pagination button:hover {
+    background-color: #e0e0e0;
+}
+
+.user-listing-pagination button.active {
+    background-color: #0073e6;
+    color: white;
+}
+
+/* Popup styles (StatusPopup component) */
+.user-listing-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.user-listing-popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    text-align: center;
+}
+
+.user-listing-popup-message {
+    margin-bottom: 20px;
+}
+
+.user-listing-popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.user-listing-popup-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.user-listing-popup-button.confirm {
+    background-color: #0073e6;
+    color: white;
+    border: none;
+}
+
+.user-listing-popup-button.confirm:hover {
+    background-color: #005bb5;
+}
+
+.user-listing-popup-button.cancel {
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+}
+
+.user-listing-popup-button.cancel:hover {
+    background-color: #e0e0e0;
+}
+
+.user-heading{
+    margin-right: 45%;
+}

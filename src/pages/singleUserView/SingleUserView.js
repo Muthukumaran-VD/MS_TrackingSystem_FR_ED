@@ -7,10 +7,11 @@ import Logo from '../../components/logo/logo';
 
 function SingleUserView() {
     const [isJobDetailsOpen, setIsJobDetailsOpen] = useState(false);
-    const [userData, setUserData] = useState({}); // State to store user data
-    const [initialUserData, setInitialUserData] = useState({}); // State to store initial user data for comparison
+    const [userData, setUserData] = useState({});
+    const [initialUserData, setInitialUserData] = useState({});
+    const [statuses, setStatuses] = useState([]); // State to store statuses
     const location = useLocation();
-    const [successMessage, setSuccessMessage] = useState(''); // State for success message
+    const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
 
     // Get the user data from location state
@@ -18,16 +19,17 @@ function SingleUserView() {
 
     // Initialize user data inside useEffect unconditionally
     useEffect(() => {
+        // console.log(user,"user")
         if (user) {
             setUserData(user); // Initialize the form with user data
             setInitialUserData(user); // Save the initial data for comparison
         }
     }, [user]); // Effect depends on the 'user' object
 
-    // If no user data is available, show a message
-    if (!user) {
-        return <h2>No user data available. Please go back and select a user.</h2>;
-    }
+    // Display a message if no user data is available
+    const noUserDataMessage = !user ? (
+        <h2>No user data available. Please go back and select a user.</h2>
+    ) : null;
 
     // Toggle job details visibility
     const toggleJobDetails = () => {
@@ -72,6 +74,7 @@ function SingleUserView() {
     // Handle input changes and update the state with new values
     const handleInputChange = (event) => {
         const { name, value } = event.target;
+        console.log(user.BGV_Request_status)
         setUserData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -81,6 +84,7 @@ function SingleUserView() {
     return (
         <div className="user-list">
             <Logo />
+            {noUserDataMessage}
             <div className='backsubmit-button'>
                 <div className='backbutton-right'>
                     <button className="backbutton" onClick={handleBackClick}>Back to List</button>

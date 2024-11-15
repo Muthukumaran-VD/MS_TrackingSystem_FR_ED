@@ -13,8 +13,7 @@
 /* Form Layout */
 .bgb-form-layout {
     display: flex;
-    justify-content: space-between;
-    gap: 5px;
+    gap:10px;
 }
 
 /* Left and Right Form Columns */

@@ -24,7 +24,6 @@ function UserList() {
             try {
                 const res = await fetch(`http://localhost:8000/users?page=${currentPage}&limit=${usersPerPage}&search=${encodeURIComponent(searchQuery)}`);
                 const data = await res.json();
-                console.log(data);
                 setUsers(data.users);
                 setTotalPages(data.totalPages);
             } catch (err) {
@@ -69,15 +68,17 @@ function UserList() {
             <div className="user-table">
                 <div className="user-row header">
                     <div className="user-data">BGV ID</div>
+                    <div className="user-data">Request No</div>
+                    <div className="user-data">Position Type</div>
                     <div className="user-data">Resource Name</div>
                     <div className="user-data">V-Account</div>
                     <div className="user-data">Project</div>
-                    <div className="user-data">VD MailId</div>
                     <div className="user-data">Client Manager</div>
+                    <div className="user-data">Client Lead</div>
                     <div className="user-data">Work Start Date</div>
                     <div className="user-data">Expiry Date</div>
                     <div className="user-data">Max Policy Expiry Date</div>
-                    <div className="user-data">Status</div>
+                    <div className="user-data">Billing Status</div>
                     <div className="user-data">Action</div>
                 </div>
 
@@ -85,6 +86,8 @@ function UserList() {
                     users.map((user, index) => (
                         <div className="user-row" key={index}>
                             <div className="user-data">{user.BGV_ID}</div>
+                            <div className="user-data">{user.Request_ID}</div>
+                            <div className="user-data">{user.Position_Type}</div>
                             <div className="user-data">{user.Resource_Name}</div>
                             <div className="user-data v-dash">
                                 <div className="email-container">
@@ -103,8 +106,8 @@ function UserList() {
                                 </div>
                             </div>
                             <div className="user-data">{user.Project}</div>
-                            <div className="user-data">{user.VueData_Email}</div>
                             <div className="user-data">{user.Client_Manager}</div>
+                            <div className="user-data">{user.Client_Lead}</div>
                             <div className="user-data">
                                 {user.Work_Start_Date ? formatDate(user.Work_Start_Date) : 'No Date Provided'}
                             </div>
@@ -114,7 +117,7 @@ function UserList() {
                             <div className="user-data">
                                 {user.Max_Policy_Expiry_Date ? formatDate(user.Max_Policy_Expiry_Date) : 'No Date Provided'}
                             </div>
-                            <div className="user-data">{user.BGV_Request_status}</div>
+                            <div className="user-data">{user.Billing_Status}</div>
                             <div className="user-data">
                                 <button className="viewbutton" onClick={() => handleViewClick(user)}>
                                     <FontAwesomeIcon icon={faEye} />

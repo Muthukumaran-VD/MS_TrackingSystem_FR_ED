@@ -7,8 +7,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
     padding: 20px;
     width: 100%;
     box-sizing: border-box;
@@ -29,7 +27,7 @@
 
 .form-group label {
     display: block;
-    font-weight: 500;
+    font-weight: bold;
     color: #333;
 }
 
@@ -41,7 +39,7 @@
 }
 
 .input-field:focus {
-    border-color: #007bff;
+    border-color: #45a049;
     outline: none;
 }
 

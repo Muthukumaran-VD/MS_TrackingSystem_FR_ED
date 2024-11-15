@@ -1,0 +1,55 @@
+/* StatusPopup.css */
+.popup-content {
+    padding: 16px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+.popup-content h4 {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.popup-content p {
+    font-size: 0.95em;
+    color: #555;
+    margin-bottom: 16px;
+}
+
+.popup-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.popup-content button {
+    padding: 6px 14px;
+    font-size: 0.9em;
+    font-weight: 500;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.popup-content button:first-of-type {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.popup-content button:first-of-type:hover {
+    background-color: #0066cc;
+}
+
+.popup-content button:last-of-type {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.popup-content button:last-of-type:hover {
+    background-color: #c0c0c0;
+}

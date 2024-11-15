@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
-import './Sidebar.css'; 
+import { Link } from 'react-router-dom';
+import './Sidebar.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTachometerAlt, faUser, faFile, faPen, faCog, faCheckCircle, faMailBulk } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = () => {
-  const navigate = useNavigate();
-  const [isMasterDataOpen, setIsMasterDataOpen] = useState(false); 
-
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    sessionStorage.removeItem('authToken');
-    navigate('/login');
-  };
+  const [isMasterDataOpen, setIsMasterDataOpen] = useState(false);
 
   const toggleMasterData = () => {
     setIsMasterDataOpen(!isMasterDataOpen);
@@ -20,30 +15,39 @@ const Sidebar = () => {
     <div className="sidenav">
       <h1 className="logo">MTS</h1>
       <div className="sidebar-names">
-        <Link to="/">Dashboard</Link>
-        <Link to="/employees">Listing Employee</Link>
-        <Link to="/bgv-request">BGV Request Form</Link>
-        <Link to="/bgv-employeeform">Employee BGV Form</Link>
-
-        {/* Master Data Dropdown */}
+        {/* Dashboard with FontAwesome icon */}
+        <Link to="/" className="sidebar-link">
+          <FontAwesomeIcon icon={faTachometerAlt} /> Dashboard
+        </Link>
+        {/* Listing Employee with FontAwesome icon */}
+        <Link to="/employees" className="sidebar-link">
+          <FontAwesomeIcon icon={faUser} /> Listing Employee
+        </Link>
+        {/* BGV Request Form with FontAwesome icon */}
+        <Link to="/bgv-request" className="sidebar-link">
+          <FontAwesomeIcon icon={faFile} /> BGV Request Form
+        </Link>
+        {/* Employee BGV Form with FontAwesome icon */}
+        <Link to="/bgv-employeeform" className="sidebar-link">
+          <FontAwesomeIcon icon={faPen} /> Employee BGV Form
+        </Link>
+        {/* Master Data Dropdown with FontAwesome icon */}
         <div className="master-data">
           <button className="dropdown-btn" onClick={toggleMasterData}>
-            Master Data
+            <FontAwesomeIcon icon={faCog} /> Master Data
             <span className={`arrow ${isMasterDataOpen ? 'open' : ''}`}>&#9660;</span>
-            {/* You can use a CSS entity for the arrow like &#9660; (down arrow) */}
           </button>
           {isMasterDataOpen && (
             <div className="dropdown-content">
-              <Link to="/employee-request-status">Employee Request Status</Link>
+              <Link to="/employee-request-status" className="sidebar-links">
+                <FontAwesomeIcon icon={faCheckCircle} /> Employee Request Status
+              </Link>
+              <Link to="/adding-mail" className="sidebar-links">
+                <FontAwesomeIcon icon={faMailBulk} /> Adding Mail
+              </Link>
             </div>
           )}
         </div>
-      </div>
-      
-      <div className="logout-container">
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
-        </button>
       </div>
     </div>
   );

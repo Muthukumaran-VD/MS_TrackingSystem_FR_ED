@@ -77,7 +77,16 @@
   /* Rotate the arrow when open */
 }
 
-.success-message{
+.success-message {
   color: green;
   font-size: 15px;
+}
+
+.status-dropdown {
+  height: 40px;
+  margin: 0 10px;
+  color: black;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
 }
