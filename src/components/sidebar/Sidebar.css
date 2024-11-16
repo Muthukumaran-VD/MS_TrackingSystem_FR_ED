@@ -5,7 +5,8 @@
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #4caf50; /* Light green background */
+  background-color: #4caf50;
+  /* Light green background */
   overflow-x: hidden;
   padding-top: 20px;
 }
@@ -15,23 +16,30 @@
 }
 
 .sidenav img {
-  max-width: 100%; /* Ensures the logo fits within the sidebar */
-  height: auto; /* Maintains aspect ratio */
-  display: block; /* Centers the logo */
-  margin: 0 auto; /* Centers the logo horizontally */
+  max-width: 100%;
+  /* Ensures the logo fits within the sidebar */
+  height: auto;
+  /* Maintains aspect ratio */
+  display: block;
+  /* Centers the logo */
+  margin: 0 auto;
+  /* Centers the logo horizontally */
 }
 
 .sidenav a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   margin-bottom: 10%;
-  font-size: 18px; /* Adjusted font size for better visibility */
-  color: whitesmoke; /* Default text color */
+  font-size: 18px;
+  /* Adjusted font size for better visibility */
+  color: whitesmoke;
+  /* Default text color */
   display: block;
 }
 
 .sidenav a:hover {
-  color: black; /* Text color on hover */
+  color: black;
+  /* Text color on hover */
 }
 
 .sidebar-link {
@@ -40,7 +48,8 @@
 }
 
 .sidebar-link .fa-icon {
-  margin-right: 10px; /* Space between icon and text */
+  margin-right: 10px;
+  /* Space between icon and text */
 }
 
 .logo {
@@ -65,7 +74,18 @@
   cursor: pointer;
 }
 
+.sidebar-links {
+  color: white;
+  margin-top: 5%;
+  font-size: 16px;
+
+}
+
 .dropdown-btn:hover {
+  color: black;
+}
+
+.sidebar-links:hover{
   color: black;
 }
 
@@ -87,11 +107,13 @@
 .arrow {
   margin-left: 60px;
   font-size: 15px;
-  transition: transform 0.3s ease; /* Smooth transition for rotating */
+  transition: transform 0.3s ease;
+  /* Smooth transition for rotating */
 }
 
 .arrow.open {
-  transform: rotate(180deg); /* Rotate arrow when dropdown is open */
+  transform: rotate(180deg);
+  /* Rotate arrow when dropdown is open */
 }
 
 .dropdown-content {

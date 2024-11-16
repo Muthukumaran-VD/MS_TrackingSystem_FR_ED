@@ -30,7 +30,6 @@ const BGVRequestForm = () => {
             try {
                 const response = await axios.get('http://localhost:8000/users/emails');
                 const data = response.data;
-                console.log(data);
                 if (data && data.emails) {
                     setEmailList(data.emails); // Assuming the response contains emails in a property called 'emails'
                 }

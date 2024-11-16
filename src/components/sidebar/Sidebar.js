@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTachometerAlt, faUser, faFile, faPen, faCog, faCheckCircle, faMailBulk } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const [isMasterDataOpen, setIsMasterDataOpen] = useState(false);
 
   const toggleMasterData = () => {
@@ -38,14 +39,22 @@ const Sidebar = () => {
             <span className={`arrow ${isMasterDataOpen ? 'open' : ''}`}>&#9660;</span>
           </button>
           {isMasterDataOpen && (
-            <div className="dropdown-content">
-              <Link to="/employee-request-status" className="sidebar-links">
-                <FontAwesomeIcon icon={faCheckCircle} /> Employee Request Status
-              </Link>
-              <Link to="/adding-mail" className="sidebar-links">
-                <FontAwesomeIcon icon={faMailBulk} /> Adding Mail
-              </Link>
-            </div>
+             <div className="dropdown-content">
+             <div>
+               <div
+                 className="sidebar-links"
+                 onClick={() => navigate('/employee-request-status')}
+               >
+                 <FontAwesomeIcon icon={faCheckCircle} /> Employee Request Status
+               </div>
+               <div
+                 className="sidebar-links"
+                 onClick={() => navigate('/adding-mail')}
+               >
+                 <FontAwesomeIcon icon={faMailBulk} /> Adding Mail
+               </div>
+             </div>
+           </div>
           )}
         </div>
       </div>
