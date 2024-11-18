@@ -55,7 +55,6 @@
 
 .section h3 {
   margin-bottom: 2px;
-  font-size: 15px;
   color: #333;
   border-bottom: 1px solid #ddd;
   cursor: pointer;
@@ -79,7 +78,6 @@
 
 .success-message {
   color: green;
-  font-size: 15px;
 }
 
 .status-dropdown {

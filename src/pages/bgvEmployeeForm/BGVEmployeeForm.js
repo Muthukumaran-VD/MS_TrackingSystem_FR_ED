@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom'; // Import useParams to access route params
 import './BGVEmployeeForm.css';
+import axios from 'axios';
 
 const BGBRequestEmployeeForm = () => {
+    const { id } = useParams(); // Get the ID from the URL
     const [formData, setFormData] = useState({
         firstName: '',
         middleName: '',
@@ -16,8 +19,47 @@ const BGBRequestEmployeeForm = () => {
         endDate: '',
         team: '',
         subGeo: '',
-        aadharDocument: null
+        aadharDocument: null,
+        toEmail: '',
+        ccEmail: ''
     });
+
+    useEffect(() => {
+        // Fetch the form data from the backend when the component mounts
+        const fetchData = async () => {
+            try {
+                const response = await axios(`http://localhost:8000/users/bgv-employeeform/${id}`);
+                const data = response.data; // No need for response.data.json()
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    return;
+                }
+                // Set the form data from the response
+                setFormData({
+                    firstName: data.First_Name || '',
+                    middleName: data.Middle_Name || '',
+                    lastName: data.Last_Name || '',
+                    legalName: data.Legal_Name || '',
+                    title: data.Title || '',
+                    manager: data.manager || '',
+                    personalCell: data.Phone_Number || '',
+                    personalEmail: data.VueData_Email || '',
+                    country: data.Country || '',
+                    startDate: data.Request_Raised_Date || '',
+                    endDate: data.Work_End_Date || '',
+                    team: data.Project || '',
+                    subGeo: data.Sub_Geo || '',
+                    aadharDocument: null, // Aadhar document is likely to be uploaded, not pre-filled
+                    toEmail: '', // Set default or fetched if available
+                    ccEmail: ''  // Set default or fetched if available
+                });
+            } catch (error) {
+                console.error('Error fetching form data:', error);
+            }
+        };
+        
+        fetchData(); // Trigger the fetch on component mount
+    }, [id]); // Dependency array includes id so it triggers when the ID changes
 
     const handleChange = (e) => {
         const { name, value } = e.target;

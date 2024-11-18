@@ -18,11 +18,12 @@ const BGVRequestForm = () => {
         personalCell: '',
         personalEmail: '',
         country: '',
-        startDate: '',
+        startDate: new Date().toISOString().split('T')[0], // Default to today's date
         endDate: '',
         teamProject: '',
         subGeo: '',
     });
+    
 
     // Fetch email IDs from the backend when the component mounts
     useEffect(() => {

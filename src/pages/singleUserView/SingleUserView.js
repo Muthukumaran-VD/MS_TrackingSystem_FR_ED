@@ -3,13 +3,11 @@ import formatDate from '../../components/dateFormat/DateFormat';
 import { useLocation, useNavigate } from 'react-router-dom'; // Import useLocation and useNavigate
 import axios from 'axios'; // Import axios for API requests
 import './SingleUserView.css';
-import Logo from '../../components/logo/logo';
 
 function SingleUserView() {
     const [isJobDetailsOpen, setIsJobDetailsOpen] = useState(false);
     const [userData, setUserData] = useState({});
     const [initialUserData, setInitialUserData] = useState({});
-    const [statuses, setStatuses] = useState([]); // State to store statuses
     const location = useLocation();
     const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
@@ -83,7 +81,6 @@ function SingleUserView() {
 
     return (
         <div className="user-list">
-            <Logo />
             {noUserDataMessage}
             <div className='backsubmit-button'>
                 <div className='backbutton-right'>

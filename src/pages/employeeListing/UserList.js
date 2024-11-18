@@ -6,12 +6,11 @@ import formatDate from '../../components/dateFormat/DateFormat';
 import handleExport from '../../components/exportButton/ExportUsers';
 import { useNavigate } from 'react-router-dom';
 import './UserList.css';
-import Logo from '../../components/logo/logo';
 
 function UserList() {
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [usersPerPage] = useState(8);
+    const [usersPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
     const [copiedEmail, setCopiedEmail] = useState('');
@@ -50,7 +49,6 @@ function UserList() {
 
     return (
         <div className="user-list">
-            <Logo />
             <div className='search-export'>
                 <input
                     type="text"

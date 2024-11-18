@@ -1,75 +1,59 @@
-// Pagination.js
 import React from 'react';
+import './Pagination.css';
 
-function Pagination({ currentPage, totalPages, paginate }) {
-    const generatePageNumbers = () => {
-        const pageNumbers = [];
-        const maxVisiblePages = 3; // Pages to show around the current page
+function Pagination({ currentPage, totalPages, onPageChange }) {
+    const getVisiblePages = () => {
+        const visiblePages = [];
+        const rangeStart = Math.max(1, currentPage - 1); // Show 1 page before current
+        const rangeEnd = Math.min(totalPages, currentPage + 1); // Show 1 page after current
 
-        if (totalPages <= maxVisiblePages + 4) {
-            // Display all pages if there are fewer pages than the threshold
-            for (let i = 1; i <= totalPages; i++) {
-                pageNumbers.push(i);
-            }
-        } else {
-            // Display first, last, and nearby pages with ellipses
-            if (currentPage > 1) pageNumbers.push(1);
-            if (currentPage > 3) pageNumbers.push('...');
-            
-            for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
-                pageNumbers.push(i);
-            }
-            
-            if (currentPage < totalPages - 2) pageNumbers.push('...');
-            if (currentPage < totalPages) pageNumbers.push(totalPages);
+        for (let i = rangeStart; i <= rangeEnd; i++) {
+            visiblePages.push(i);
         }
-        return pageNumbers;
+        return visiblePages;
+    };
+
+    const visiblePages = getVisiblePages();
+
+    const handlePrev = () => {
+        if (currentPage > 1) onPageChange(currentPage - 1);
+    };
+
+    const handleNext = () => {
+        if (currentPage < totalPages) onPageChange(currentPage + 1);
     };
 
     return (
-        <nav className="pagination">
-            <ul className="pagination-list">
-                {/* Previous Button */}
-                <li className={`pagination-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                    <button
-                        onClick={() => paginate(currentPage - 1)}
-                        className="pagination-button"
-                        disabled={currentPage === 1}
-                    >
-                        &lt;
-                    </button>
-                </li>
+        <div className="pagination-container">
+            {/* Previous Button */}
+            <button
+                className="pagination-btn"
+                onClick={handlePrev}
+                disabled={currentPage === 1}
+            >
+                Previous
+            </button>
 
-                {/* Page Numbers */}
-                {generatePageNumbers().map((number, index) => (
-                    <li
-                        key={index}
-                        className={`pagination-item ${
-                            currentPage === number ? 'active' : ''
-                        } ${number === '...' ? 'ellipsis' : ''}`}
-                    >
-                        {number === '...' ? (
-                            <span className="pagination-ellipsis">...</span>
-                        ) : (
-                            <button onClick={() => paginate(number)} className="pagination-button">
-                                {number}
-                            </button>
-                        )}
-                    </li>
-                ))}
+            {/* Page Buttons */}
+            {visiblePages.map((number) => (
+                <button
+                    key={number}
+                    className={`pagination-btn ${number === currentPage ? 'active' : ''}`}
+                    onClick={() => onPageChange(number)}
+                >
+                    {number}
+                </button>
+            ))}
 
-                {/* Next Button */}
-                <li className={`pagination-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                    <button
-                        onClick={() => paginate(currentPage + 1)}
-                        className="pagination-button"
-                        disabled={currentPage === totalPages}
-                    >
-                        &gt;
-                    </button>
-                </li>
-            </ul>
-        </nav>
+            {/* Next Button */}
+            <button
+                className="pagination-btn"
+                onClick={handleNext}
+                disabled={currentPage === totalPages}
+            >
+                Next
+            </button>
+        </div>
     );
 }
 

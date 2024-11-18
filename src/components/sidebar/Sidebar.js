@@ -24,6 +24,9 @@ const Sidebar = () => {
         <Link to="/employees" className="sidebar-link">
           <FontAwesomeIcon icon={faUser} /> Listing Employee
         </Link>
+        <Link to="/user-listing" className="sidebar-link">
+          <FontAwesomeIcon icon={faUser} /> BGV Listing Employee
+        </Link>
         {/* BGV Request Form with FontAwesome icon */}
         <Link to="/bgv-request" className="sidebar-link">
           <FontAwesomeIcon icon={faFile} /> BGV Request Form

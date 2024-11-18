@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Pagination from '../../components/Pagination/Pagination';
-import formatDate from '../../components/dateFormat/DateFormat';
-import Logo from '../../components/logo/logo';
-import axios from 'axios';
+import StatusDropdown from '../../components/statusDropdown/StatusDropdown';
 import StatusPopup from '../../components/popup/PopUp';
-import './UserListing.css'
-
+import { fetchUsers, fetchStatuses, updateUserStatus } from '../../apiService';
+import formatDate from '../../components/dateFormat/DateFormat';
+import './UserListing.css';
 
 function UserListing() {
     const [users, setUsers] = useState([]);
@@ -20,79 +19,68 @@ function UserListing() {
     const [selectedStatus, setSelectedStatus] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
     useEffect(() => {
-        const fetchUsers = async () => {
+        const loadUsers = async () => {
             try {
-                const res = await fetch(`http://localhost:8000/users?page=${currentPage}&limit=${usersPerPage}&search=${encodeURIComponent(searchQuery)}`);
-                const data = await res.json();
+                const data = await fetchUsers(currentPage, usersPerPage, searchQuery);
                 setUsers(data.users);
                 setTotalPages(data.totalPages);
-            } catch (err) {
-                console.error(err);
+            } catch (error) {
+                console.error('Error fetching users:', error);
             }
         };
-        fetchUsers();
+        loadUsers();
     }, [currentPage, usersPerPage, searchQuery]);
+
+    useEffect(() => {
+        const loadStatuses = async () => {
+            try {
+                const data = await fetchStatuses();
+                setStatuses(data);
+            } catch (error) {
+                console.error('Error fetching statuses:', error);
+            }
+        };
+        loadStatuses();
+    }, []);
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
         setCurrentPage(1);
     };
 
-    const handleStatusChange = async () => {
+    const handleStatusUpdate = async () => {
         try {
-            const response = await axios.post(`http://localhost:8000/users/updatinguserstatus`, {
-                userId: selectedUserId,
-                status: selectedStatus
-            });
-
-            if (response.status === 200) {
-                setSuccessMessage("Status updated successfully!");
-                const updatedUsers = users.map(user => 
+            console.log(selectedUserId,selectedStatus)
+            const success = await updateUserStatus(selectedUserId, selectedStatus);
+            if (success) {
+                setSuccessMessage('Status updated successfully!');
+                setUsers(users.map(user =>
                     user.ID === selectedUserId ? { ...user, BGV_Request_status: selectedStatus } : user
-                );
-                setUsers(updatedUsers);
+                ));
                 setPopupOpen(false);
-
-                setTimeout(() => {
-                    setSuccessMessage('');
-                }, 3000);
+                setTimeout(() => setSuccessMessage(''), 3000);
             } else {
-                alert("Failed to update status.");
+                alert('Failed to update status.');
             }
         } catch (error) {
-            console.error("Error updating status:", error);
-            alert("An error occurred while updating the status.");
+            console.error('Error updating status:', error);
+            alert('An error occurred while updating the status.');
         }
     };
 
-    useEffect(() => {
-        const fetchStatuses = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/users/statuses');
-                setStatuses(response.data);
-            } catch (error) {
-                console.error('Error fetching statuses:', error);
-                setStatuses([]);
-            }
-        };
-        fetchStatuses();
-    }, []);
-
-    const handleDropdownChange = (userId, status) => {
+    const openStatusPopup = (userId, statusId) => {
         setSelectedUserId(userId);
-        setSelectedStatus(status);
-        setPopupMessage(`Do you want to change the status to "${status}"?`);
+        setSelectedStatus(statusId);
+        const statusName = statuses.find(status => status.id === parseInt(statusId))?.name;
+        setPopupMessage(`Do you want to change the status to "${statusName}"?`);
         setPopupOpen(true);
     };
 
     return (
         <div className="user-listing-container">
-            <Logo />
             {successMessage && <div className="user-listing-success-message">{successMessage}</div>}
-            <div className="user-listing-search-export">
+            <div className="user-listing-header">
                 <input
                     type="text"
                     placeholder="Search users..."
@@ -100,65 +88,52 @@ function UserListing() {
                     onChange={handleSearchChange}
                     className="user-listing-search-box"
                 />
-                <h2 className='user-heading'>Users</h2>
+                <h2 className="user-listing-heading">Users</h2>
             </div>
             <div className="user-listing-table">
-                <table>
+                <table className="user-listing-table-content">
                     <thead>
-                        <tr className="user-listing-header-row">
-                            <th className="user-listing-header-data">ID</th>
-                            <th className="user-listing-header-data">Resource Name</th>
-                            <th className="user-listing-header-data">Personal Email</th>
-                            <th className="user-listing-header-data">Project Title</th>
-                            <th className="user-listing-header-data">BGV Request Date</th>
-                            <th className="user-listing-header-data-status">Status</th>
+                        <tr>
+                            <th className="user-listing-table-header">ID</th>
+                            <th className="user-listing-table-header">Resource Name</th>
+                            <th className="user-listing-table-header">Personal Email</th>
+                            <th className="user-listing-table-header">Project Title</th>
+                            <th className="user-listing-table-header">BGV Request Date</th>
+                            <th className="user-listing-table-header">Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {Array.isArray(users) && users.length > 0 ? (
-                            users.map((user, index) => (
-                                <tr className="user-listing-row" key={index}>
-                                    <td className="user-listing-data">{user.ID}</td>
-                                    <td className="user-listing-data">{user.Resource_Name}</td>
-                                    <td className="user-listing-data">{user.VueData_Email}</td>
-                                    <td className="user-listing-data">{user.Project}</td>
-                                    <td className="user-listing-data">
-                                        {user.Request_Raised_Date ? formatDate(user.Request_Raised_Date) : 'No Date Provided'}
-                                    </td>
-                                    <td className="user-listing-data-status">
-                                        <select className="user-listing-dropdown-status"
-                                            value={user.BGV_Request_status || ''}
-                                            onChange={(e) => handleDropdownChange(user.ID, e.target.value)}
-                                        >
-                                            {statuses.map((status, idx) => (
-                                                <option key={idx} value={status.name}>
-                                                    {status.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="7" className="user-listing-no-data">No match found</td>
+                        {users.map((user) => (
+                            <tr key={user.ID} className="user-listing-table-row">
+                                <td>{user.ID}</td>
+                                <td>{user.Legal_Name}</td>
+                                <td>{user.VueData_Email}</td>
+                                <td>{user.Project}</td>
+                                <td>{user.Request_Raised_Date ? formatDate(user.Request_Raised_Date) : 'No Date Provided'}</td>
+                                <td>
+                                    <StatusDropdown
+                                        statuses={statuses}
+                                        currentStatus={user.BGV_Request_status}
+                                        onChange={(statusId) => openStatusPopup(user.ID, statusId)}
+                                    />
+                                </td>
                             </tr>
-                        )}
+                        ))}
                     </tbody>
                 </table>
             </div>
             <Pagination
-                usersPerPage={usersPerPage}
-                totalPages={totalPages}
-                paginate={paginate}
                 currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                className="user-listing-pagination"
             />
-
-            <StatusPopup 
-                isOpen={popupOpen} 
-                onClose={() => setPopupOpen(false)} 
-                onSave={handleStatusChange} 
-                message={popupMessage} 
+            <StatusPopup
+                isOpen={popupOpen}
+                onClose={() => setPopupOpen(false)}
+                onSave={handleStatusUpdate}
+                message={popupMessage}
+                className="user-listing-popup"
             />
         </div>
     );
