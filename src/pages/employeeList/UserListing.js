@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Pagination from '../../components/Pagination/Pagination';
 import StatusDropdown from '../../components/statusDropdown/StatusDropdown';
-import StatusPopup from '../../components/popup/PopUp';
 import { fetchUsers, fetchStatuses, updateUserStatus } from '../../apiService';
 import formatDate from '../../components/dateFormat/DateFormat';
 import './UserListing.css';
@@ -13,10 +12,6 @@ function UserListing() {
     const [usersPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
-    const [popupOpen, setPopupOpen] = useState(false);
-    const [popupMessage, setPopupMessage] = useState('');
-    const [selectedUserId, setSelectedUserId] = useState(null);
-    const [selectedStatus, setSelectedStatus] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
@@ -49,16 +44,14 @@ function UserListing() {
         setCurrentPage(1);
     };
 
-    const handleStatusUpdate = async () => {
+    const handleStatusUpdate = async (userId, newStatus) => {
         try {
-            console.log(selectedUserId,selectedStatus)
-            const success = await updateUserStatus(selectedUserId, selectedStatus);
+            const success = await updateUserStatus(userId, newStatus);
             if (success) {
                 setSuccessMessage('Status updated successfully!');
                 setUsers(users.map(user =>
-                    user.ID === selectedUserId ? { ...user, BGV_Request_status: selectedStatus } : user
+                    user.ID === userId ? { ...user, BGV_Request_status: newStatus } : user
                 ));
-                setPopupOpen(false);
                 setTimeout(() => setSuccessMessage(''), 3000);
             } else {
                 alert('Failed to update status.');
@@ -67,14 +60,6 @@ function UserListing() {
             console.error('Error updating status:', error);
             alert('An error occurred while updating the status.');
         }
-    };
-
-    const openStatusPopup = (userId, statusId) => {
-        setSelectedUserId(userId);
-        setSelectedStatus(statusId);
-        const statusName = statuses.find(status => status.id === parseInt(statusId))?.name;
-        setPopupMessage(`Do you want to change the status to "${statusName}"?`);
-        setPopupOpen(true);
     };
 
     return (
@@ -114,7 +99,7 @@ function UserListing() {
                                     <StatusDropdown
                                         statuses={statuses}
                                         currentStatus={user.BGV_Request_status}
-                                        onChange={(statusId) => openStatusPopup(user.ID, statusId)}
+                                        onChange={(statusId) => handleStatusUpdate(user.ID, statusId)}
                                     />
                                 </td>
                             </tr>
@@ -127,13 +112,6 @@ function UserListing() {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 className="user-listing-pagination"
-            />
-            <StatusPopup
-                isOpen={popupOpen}
-                onClose={() => setPopupOpen(false)}
-                onSave={handleStatusUpdate}
-                message={popupMessage}
-                className="user-listing-popup"
             />
         </div>
     );
