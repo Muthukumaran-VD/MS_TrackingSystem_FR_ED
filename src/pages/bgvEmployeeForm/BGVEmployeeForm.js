@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'; // Import useParams to access route params
 import './BGVEmployeeForm.css';
 import axios from 'axios';
+import formatDate from '../../components/dateFormat/DateFormat';
 
 const BGBRequestEmployeeForm = () => {
     const { id } = useParams(); // Get the ID from the URL
@@ -21,7 +22,8 @@ const BGBRequestEmployeeForm = () => {
         subGeo: '',
         aadharDocument: null,
         toEmail: '',
-        ccEmail: ''
+        ccEmail: '',
+        id: '' // Initialize id here for form submission
     });
 
     useEffect(() => {
@@ -36,6 +38,7 @@ const BGBRequestEmployeeForm = () => {
                 }
                 // Set the form data from the response
                 setFormData({
+                    id: data.ID, // Ensure the id is set from the response
                     firstName: data.First_Name || '',
                     middleName: data.Middle_Name || '',
                     lastName: data.Last_Name || '',
@@ -45,7 +48,7 @@ const BGBRequestEmployeeForm = () => {
                     personalCell: data.Phone_Number || '',
                     personalEmail: data.VueData_Email || '',
                     country: data.Country || '',
-                    startDate: data.Request_Raised_Date || '',
+                    startDate: formatDate(data.Request_Raised_Date) || '',
                     endDate: data.Work_End_Date || '',
                     team: data.Project || '',
                     subGeo: data.Sub_Geo || '',
@@ -57,7 +60,7 @@ const BGBRequestEmployeeForm = () => {
                 console.error('Error fetching form data:', error);
             }
         };
-        
+
         fetchData(); // Trigger the fetch on component mount
     }, [id]); // Dependency array includes id so it triggers when the ID changes
 
@@ -72,15 +75,53 @@ const BGBRequestEmployeeForm = () => {
     const handleFileChange = (e) => {
         setFormData({
             ...formData,
-            aadharDocument: e.target.files[0]
+            aadharDocument: e.target.files[0] // Ensure the file is stored
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form Data Submitted:', formData);
-        // Add your form submission logic here (e.g., send the data to an API)
+    
+        const formDataObj = {
+            id: formData.id, // Ensure the backend ID is included
+            firstName: formData.firstName,
+            middleName: formData.middleName,
+            lastName: formData.lastName,
+            legalName: formData.legalName,
+            title: formData.title,
+            manager: formData.manager,
+            personalCell: formData.personalCell,
+            personalEmail: formData.personalEmail,
+            country: formData.country,
+            startDate: formData.startDate,
+            endDate: formData.endDate,
+            team: formData.team,
+            subGeo: formData.subGeo,
+            toEmail: formData.toEmail,
+            ccEmail: formData.ccEmail,
+        };
+    
+        console.log('Submitting Data:', formDataObj);
+    
+        const data = new FormData();
+        data.append('data', JSON.stringify(formDataObj));
+        if (formData.aadharDocument) {
+            data.append('aadharDocument', formData.aadharDocument);
+        }
+    
+        try {
+            const response = await axios.put('http://localhost:8000/users/update-aadhar-email', data);
+            console.log('Email sent and data updated:', response.data);
+            window.alert(response.data.message);
+        } catch (error) {
+            console.error('Error:', error);
+            if (error.response) {
+                console.error('Response data:', error.response.data);
+            }
+        }
     };
+    
+
 
     return (
         <div className="bgb-form-container">

@@ -135,7 +135,7 @@ function UserList() {
             <Pagination
                 usersPerPage={usersPerPage}
                 totalPages={totalPages}
-                paginate={paginate}
+                onPageChange={paginate} // Match the expected prop name
                 currentPage={currentPage}
             />
         </div>
