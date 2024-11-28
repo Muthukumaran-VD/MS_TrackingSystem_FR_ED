@@ -13,6 +13,10 @@ function UserListing() {
     const [totalPages, setTotalPages] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [showModal, setShowModal] = useState(false); // For controlling the modal visibility
+    const [selectedUserId, setSelectedUserId] = useState(null); // To keep track of the selected user
+    const [screenshot, setScreenshot] = useState(null); // For storing the uploaded file
+    const [bgvSubmissionDate, setBgvSubmissionDate] = useState(new Date().toISOString().slice(0, 10)); // Default to today's date
 
     useEffect(() => {
         const loadUsers = async () => {
@@ -44,21 +48,63 @@ function UserListing() {
         setCurrentPage(1);
     };
 
+    const handleFileChange = (e) => {
+        setScreenshot(e.target.files[0]); // Handle the file selection
+    };
+
     const handleStatusUpdate = async (userId, newStatus) => {
+        if (newStatus === "BGV Submitted") {
+            setSelectedUserId(userId); // Set the selected user when the status is BGV Submitted
+            setShowModal(true); // Show the modal
+        } else {
+            try {
+                const success = await updateUserStatus(userId, newStatus);
+                if (success) {
+                    setSuccessMessage('Status updated successfully!');
+                    setUsers(users.map(user =>
+                        user.ID === userId ? { ...user, BGV_Request_status: newStatus } : user
+                    ));
+                    setTimeout(() => setSuccessMessage(''), 3000);
+                } else {
+                    alert('Failed to update status.');
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('An error occurred while updating the status.');
+            }
+        }
+    };
+
+    const handleSubmit = async () => {
+        if (!screenshot) {
+            alert("Please upload a screenshot.");
+            return;
+        }
+
+        // Create FormData to send to the backend
+        const formData = new FormData();
+        formData.append('userId', selectedUserId);
+        formData.append('screenshot', screenshot);
+        formData.append('bgvSubmissionDate', bgvSubmissionDate);
+
+        // Send the FormData to the backend
         try {
-            const success = await updateUserStatus(userId, newStatus);
-            if (success) {
-                setSuccessMessage('Status updated successfully!');
+            const response = await fetch(`/api/update-bgv/${selectedUserId}`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                alert("BGV Submitted successfully!");
+                setShowModal(false); // Close the modal after submission
                 setUsers(users.map(user =>
-                    user.ID === userId ? { ...user, BGV_Request_status: newStatus } : user
+                    user.ID === selectedUserId ? { ...user, BGV_Request_status: 'BGV Submitted' } : user
                 ));
-                setTimeout(() => setSuccessMessage(''), 3000);
             } else {
-                alert('Failed to update status.');
+                alert("Error submitting BGV.");
             }
         } catch (error) {
-            console.error('Error updating status:', error);
-            alert('An error occurred while updating the status.');
+            console.error('Error uploading BGV:', error);
         }
     };
 
@@ -113,6 +159,28 @@ function UserListing() {
                 onPageChange={setCurrentPage}
                 className="user-listing-pagination"
             />
+
+            {/* Modal Popup */}
+            {showModal && (
+                <div className="bgv-modal">
+                    <div className="bgv-modal-content">
+                        <h3>Upload Screenshot & BGV Submission Date</h3>
+                        <input
+                            type="file"
+                            onChange={handleFileChange}
+                        />
+                        <br />
+                        <input
+                            type="date"
+                            value={bgvSubmissionDate}
+                            onChange={(e) => setBgvSubmissionDate(e.target.value)}
+                        />
+                        <br />
+                        <button className="submit-button" onClick={handleSubmit}>Submit</button>
+                        <button className='cancel-button' onClick={() => setShowModal(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

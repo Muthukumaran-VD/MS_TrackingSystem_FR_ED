@@ -1,12 +1,12 @@
 .sidenav {
   height: 100%;
   width: 250px;
-  font-size: 15px;
+  font-size: 17px;
   position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #4caf50;
+  background-color: #5782af;
   overflow-x: hidden;
   padding-top: 20px;
 }
@@ -66,7 +66,7 @@
   color: white;
   display: block;
   background: none;
-  font-size: 15px;
+  font-size: 17px;
   border: none;
   width: 100%;
   text-align: left;

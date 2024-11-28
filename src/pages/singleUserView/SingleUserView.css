@@ -11,10 +11,21 @@
   justify-content: space-between;
 }
 
+div.section{
+  padding-bottom: 5px;
+}
+
+div.user-details-grid > p{
+  padding-bottom: 15px;
+  padding-top: 10px;
+
+}
+
 .submit-button {
   background-color: #007bff;
   color: white;
   border: none;
+  width: 105px;
   height: 40px;
   border-radius: 5px;
   cursor: pointer;
