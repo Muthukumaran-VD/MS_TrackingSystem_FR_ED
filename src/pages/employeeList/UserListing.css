@@ -55,7 +55,7 @@
 
 .user-listing-table-content>thead>tr {
     background-color: #e0e0e0;
-    font-weight: bold;  
+    font-weight: bold;
 }
 
 .user-listing-table-header {
@@ -68,6 +68,47 @@
 
 .user-listing-table-row {
     border-bottom: 1px solid #ddd;
+}
+
+/* Input Field Styling */
+.bgv-modal-content input[type="file"] {
+    font-size: 0.9rem;
+    color: #555;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.bgv-modal-content input[type="file"]::-webkit-file-upload-button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.bgv-modal-content input[type="file"]::-webkit-file-upload-button:hover {
+    background: #0056b3;
+}
+
+.bgv-modal-content input[type="text"] {
+    font-size: 0.9rem;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.bgv-modal-content>h4 {
+    text-align: left;
+    padding: 5px;
+}
+
+.bgv-modal-content input[type="text"]::placeholder {
+    color: #aaa;
+    font-style: italic;
 }
 
 .user-listing-table-row td {
@@ -116,7 +157,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999; /* Ensure modal is on top */
+    z-index: 9999;
+    /* Ensure modal is on top */
 }
 
 .bgv-modal-content {
@@ -138,6 +180,7 @@
 .bgv-modal input[type="file"] {
     margin-bottom: 15px;
     font-size: 14px;
+    width: 100%;
     padding: 6px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -175,6 +218,113 @@
 /* Disable the background scroll when modal is open */
 body.modal-open {
     overflow: hidden;
+}
+
+
+/* ECA Modal Styling */
+
+.eca-form-container {
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(3, 1fr); /* Three equal columns */
+    gap: 20px; /* Space between items */
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.eca-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 1400px;
+    /* Adjusted for more space */
+    height: 90vh;
+    overflow-y: auto;
+    /* Enable scrolling for long forms */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-button:hover {
+    color: #ff0000;
+}
+
+.eca-modal h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    width: 100%;
+    /* Ensure the title spans the full width */
+}
+
+.eca-modal input,
+.eca-modal select {
+    font-size: 0.9rem;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.eca-modal select {
+    background: #fff;
+}
+
+.eca-modal .form-field p {
+    margin-bottom: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Buttons */
+.eca-modal .submit-button,
+.eca-modal .cancel-button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+    /* Buttons span the full width of their container */
+}
+
+.eca-modal .submit-button {
+    background-color: #007bff;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.eca-modal .submit-button:hover {
+    background-color: #0056b3;
+}
+
+.eca-modal .cancel-button {
+    background-color: #dc3545;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.eca-modal .cancel-button:hover {
+    background-color: #c82333;
 }
 
 /* Responsive styles */

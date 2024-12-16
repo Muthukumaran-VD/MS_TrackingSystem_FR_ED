@@ -1,11 +1,18 @@
+// Imports and utility imports
 import React, { useState, useEffect } from 'react';
 import Pagination from '../../components/Pagination/Pagination';
 import StatusDropdown from '../../components/statusDropdown/StatusDropdown';
-import { fetchUsers, fetchStatuses, updateUserStatus } from '../../apiService';
+import { fetchUsers, fetchStatuses, updateUserStatus, submitEcaDetails, submitBgvDetails, completeBgvDetails } from '../../apiService';
 import formatDate from '../../components/dateFormat/DateFormat';
 import './UserListing.css';
 
+// Separate component for Modals
+import BgvSubmissionModal from '../../components/modals/BgvSubmissionModal';
+import BgvCompletedModal from '../../components/modals/BgvCompletedModal';
+import EcaSharedModal from '../../components/modals/EcaSharedModal';
+
 function UserListing() {
+    // State management
     const [users, setUsers] = useState([]);
     const [statuses, setStatuses] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -13,11 +20,17 @@ function UserListing() {
     const [totalPages, setTotalPages] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const [showModal, setShowModal] = useState(false); // For controlling the modal visibility
-    const [selectedUserId, setSelectedUserId] = useState(null); // To keep track of the selected user
-    const [screenshot, setScreenshot] = useState(null); // For storing the uploaded file
-    const [bgvSubmissionDate, setBgvSubmissionDate] = useState(new Date().toISOString().slice(0, 10)); // Default to today's date
 
+    // Modal visibility and state
+    const [modals, setModals] = useState({
+        showBgvModal: false,
+        showBgvCompletedModal: false,
+        showEcaSharedModal: false
+    });
+
+    const [selectedUser, setSelectedUser] = useState(null);
+
+    // Fetch users data
     useEffect(() => {
         const loadUsers = async () => {
             try {
@@ -31,6 +44,7 @@ function UserListing() {
         loadUsers();
     }, [currentPage, usersPerPage, searchQuery]);
 
+    // Fetch statuses data
     useEffect(() => {
         const loadStatuses = async () => {
             try {
@@ -43,28 +57,23 @@ function UserListing() {
         loadStatuses();
     }, []);
 
+    // Handlers for search and pagination
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
         setCurrentPage(1);
     };
 
-    const handleFileChange = (e) => {
-        setScreenshot(e.target.files[0]); // Handle the file selection
-    };
-
     const handleStatusUpdate = async (userId, newStatus) => {
-        if (newStatus === "BGV Submitted") {
-            setSelectedUserId(userId); // Set the selected user when the status is BGV Submitted
-            setShowModal(true); // Show the modal
-        } else {
+        setSelectedUser(users.find(user => user.ID === userId));
+        if (newStatus === "BGV Submitted") setModals({ ...modals, showBgvModal: true });
+        else if (newStatus === "BGV Completed") setModals({ ...modals, showBgvCompletedModal: true });
+        else if (newStatus === "ECA Shared") setModals({ ...modals, showEcaSharedModal: true });
+        else {
             try {
                 const success = await updateUserStatus(userId, newStatus);
                 if (success) {
                     setSuccessMessage('Status updated successfully!');
-                    setUsers(users.map(user =>
-                        user.ID === userId ? { ...user, BGV_Request_status: newStatus } : user
-                    ));
-                    setTimeout(() => setSuccessMessage(''), 3000);
+                    updateUserLocalState(userId, newStatus);
                 } else {
                     alert('Failed to update status.');
                 }
@@ -75,37 +84,11 @@ function UserListing() {
         }
     };
 
-    const handleSubmit = async () => {
-        if (!screenshot) {
-            alert("Please upload a screenshot.");
-            return;
-        }
-
-        // Create FormData to send to the backend
-        const formData = new FormData();
-        formData.append('userId', selectedUserId);
-        formData.append('screenshot', screenshot);
-        formData.append('bgvSubmissionDate', bgvSubmissionDate);
-
-        // Send the FormData to the backend
-        try {
-            const response = await fetch(`/api/update-bgv/${selectedUserId}`, {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                alert("BGV Submitted successfully!");
-                setShowModal(false); // Close the modal after submission
-                setUsers(users.map(user =>
-                    user.ID === selectedUserId ? { ...user, BGV_Request_status: 'BGV Submitted' } : user
-                ));
-            } else {
-                alert("Error submitting BGV.");
-            }
-        } catch (error) {
-            console.error('Error uploading BGV:', error);
-        }
+    const updateUserLocalState = (userId, newStatus) => {
+        setUsers(users.map(user =>
+            user.ID === userId ? { ...user, BGV_Request_status: newStatus } : user
+        ));
+        setTimeout(() => setSuccessMessage(''), 3000);
     };
 
     return (
@@ -125,17 +108,17 @@ function UserListing() {
                 <table className="user-listing-table-content">
                     <thead>
                         <tr>
-                            <th className="user-listing-table-header">ID</th>
-                            <th className="user-listing-table-header">Resource Name</th>
-                            <th className="user-listing-table-header">Personal Email</th>
-                            <th className="user-listing-table-header">Project Title</th>
-                            <th className="user-listing-table-header">BGV Request Date</th>
-                            <th className="user-listing-table-header">Status</th>
+                            <th>ID</th>
+                            <th>Resource Name</th>
+                            <th>Personal Email</th>
+                            <th>Project Title</th>
+                            <th>BGV Request Date</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {users.map((user) => (
-                            <tr key={user.ID} className="user-listing-table-row">
+                            <tr key={user.ID}>
                                 <td>{user.ID}</td>
                                 <td>{user.Legal_Name}</td>
                                 <td>{user.VueData_Email}</td>
@@ -157,29 +140,43 @@ function UserListing() {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
-                className="user-listing-pagination"
             />
 
-            {/* Modal Popup */}
-            {showModal && (
-                <div className="bgv-modal">
-                    <div className="bgv-modal-content">
-                        <h3>Upload Screenshot & BGV Submission Date</h3>
-                        <input
-                            type="file"
-                            onChange={handleFileChange}
-                        />
-                        <br />
-                        <input
-                            type="date"
-                            value={bgvSubmissionDate}
-                            onChange={(e) => setBgvSubmissionDate(e.target.value)}
-                        />
-                        <br />
-                        <button className="submit-button" onClick={handleSubmit}>Submit</button>
-                        <button className='cancel-button' onClick={() => setShowModal(false)}>Cancel</button>
-                    </div>
-                </div>
+            {/* Modal Components */}
+            {modals.showBgvModal && (
+                <BgvSubmissionModal
+                    user={selectedUser}
+                    onClose={() => setModals({ ...modals, showBgvModal: false })}
+                    onSubmit={async (formData) => {
+                        await submitBgvDetails(selectedUser.ID, formData);
+                        setModals({ ...modals, showBgvModal: false });
+                        updateUserLocalState(selectedUser.ID, "BGV Submitted");
+                    }}
+                />
+            )}
+
+            {modals.showBgvCompletedModal && (
+                <BgvCompletedModal
+                    user={selectedUser}
+                    onClose={() => setModals({ ...modals, showBgvCompletedModal: false })}
+                    onSubmit={async (formData) => {
+                        await completeBgvDetails(selectedUser.ID, formData);
+                        setModals({ ...modals, showBgvCompletedModal: false });
+                        updateUserLocalState(selectedUser.ID, "BGV Completed");
+                    }}
+                />
+            )}
+
+            {modals.showEcaSharedModal && (
+                <EcaSharedModal
+                    user={selectedUser}
+                    onClose={() => setModals({ ...modals, showEcaSharedModal: false })}
+                    onSubmit={async (ecaForm) => {
+                        await submitEcaDetails(selectedUser.ID, ecaForm);
+                        setModals({ ...modals, showEcaSharedModal: false });
+                        updateUserLocalState(selectedUser.ID, "ECA Shared");
+                    }}
+                />
             )}
         </div>
     );

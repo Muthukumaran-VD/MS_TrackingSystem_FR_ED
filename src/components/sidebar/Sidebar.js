@@ -1,63 +1,91 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'; // Use NavLink for all links
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faUser, faFile, faPen, faCog, faCheckCircle, faMailBulk } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faUser, faFile, faPen, faCog, faCheckCircle, faMailBulk, faBars } from '@fortawesome/free-solid-svg-icons';
 
-const Sidebar = () => {
-  const navigate = useNavigate();
+const Sidebar = ({ onCollapse }) => {
   const [isMasterDataOpen, setIsMasterDataOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleMasterData = () => {
     setIsMasterDataOpen(!isMasterDataOpen);
   };
 
+  const toggleSidebar = () => {
+    setIsCollapsed(!isCollapsed);
+    onCollapse(!isCollapsed); // Notify parent component
+  };
+
   return (
-    <div className="sidenav">
-      <h1 className="logo">MTS</h1>
+    <div className={`sidenav ${isCollapsed ? 'collapsed' : ''}`}>
+      {/* Collapse Button */}
+      <button className="collapse-button" onClick={toggleSidebar}>
+        <FontAwesomeIcon icon={faBars} />
+      </button>
+
+      {/* Sidebar Content */}
+      <h1 className="logo">{!isCollapsed && 'MTS'}</h1>
       <div className="sidebar-names">
-        {/* Dashboard with FontAwesome icon */}
-        <Link to="/" className="sidebar-link">
-          <FontAwesomeIcon icon={faTachometerAlt} /> Dashboard
-        </Link>
-        {/* Listing Employee with FontAwesome icon */}
-        <Link to="/employees" className="sidebar-link">
-          <FontAwesomeIcon icon={faUser} /> Listing Employee
-        </Link>
-        <Link to="/user-listing" className="sidebar-link">
-          <FontAwesomeIcon icon={faUser} /> BGV Listing Employee
-        </Link>
-        {/* BGV Request Form with FontAwesome icon */}
-        <Link to="/bgv-request" className="sidebar-link">
-          <FontAwesomeIcon icon={faFile} /> BGV Request Form
-        </Link>
-        {/* Employee BGV Form with FontAwesome icon */}
-        <Link to="/bgv-employeeform" className="sidebar-link">
-          <FontAwesomeIcon icon={faPen} /> Employee BGV Form
-        </Link>
-        {/* Master Data Dropdown with FontAwesome icon */}
+        <NavLink
+          to="/"
+          className="sidebar-link"
+          activeClassName="active" // Apply active class for the Dashboard link
+        >
+          <FontAwesomeIcon icon={faTachometerAlt} /> {!isCollapsed && 'Dashboard'}
+        </NavLink>
+        <NavLink
+          to="/employees"
+          className="sidebar-link"
+          activeClassName="active" // Apply active class for the Listing Employee link
+        >
+          <FontAwesomeIcon icon={faUser} /> {!isCollapsed && 'Listing Employee'}
+        </NavLink>
+        <NavLink
+          to="/user-listing"
+          className="sidebar-link"
+          activeClassName="active" // Apply active class for the BGV Listing Employee link
+        >
+          <FontAwesomeIcon icon={faUser} /> {!isCollapsed && 'BGV Listing Employee'}
+        </NavLink>
+        <NavLink
+          to="/bgv-request"
+          className="sidebar-link"
+          activeClassName="active" // Apply active class for the BGV Request Form link
+        >
+          <FontAwesomeIcon icon={faFile} /> {!isCollapsed && 'BGV Request Form'}
+        </NavLink>
+        <NavLink
+          to="/bgv-employeeform"
+          className="sidebar-link"
+          activeClassName="active" // Apply active class for the Employee BGV Form link
+        >
+          <FontAwesomeIcon icon={faPen} /> {!isCollapsed && 'Employee BGV Form'}
+        </NavLink>
         <div className="master-data">
           <button className="dropdown-btn" onClick={toggleMasterData}>
-            <FontAwesomeIcon icon={faCog} /> Master Data
-            <span className={`arrow ${isMasterDataOpen ? 'open' : ''}`}>&#9660;</span>
+            <FontAwesomeIcon icon={faCog} /> {!isCollapsed && 'Master Data'}
+            {!isCollapsed && (
+              <span className={`arrow ${isMasterDataOpen ? 'open' : ''}`}>&#9660;</span>
+            )}
           </button>
-          {isMasterDataOpen && (
-             <div className="dropdown-content">
-             <div>
-               <div
-                 className="sidebar-links"
-                 onClick={() => navigate('/employee-request-status')}
-               >
-                 <FontAwesomeIcon icon={faCheckCircle} /> Employee Request Status
-               </div>
-               <div
-                 className="sidebar-links"
-                 onClick={() => navigate('/adding-mail')}
-               >
-                 <FontAwesomeIcon icon={faMailBulk} /> Adding Mail
-               </div>
-             </div>
-           </div>
+          {isMasterDataOpen && !isCollapsed && (
+            <div className="dropdown-content">
+              <NavLink
+                to="/employee-request-status"
+                className="sidebar-links"
+                activeClassName="active" // Apply active class for the Employee Request Status link
+              >
+                <FontAwesomeIcon icon={faCheckCircle} /> Employee Request Status
+              </NavLink>
+              <NavLink
+                to="/adding-mail"
+                className="sidebar-links"
+                activeClassName="active" // Apply active class for the Adding Mail link
+              >
+                <FontAwesomeIcon icon={faMailBulk} /> Adding Mail
+              </NavLink>
+            </div>
           )}
         </div>
       </div>

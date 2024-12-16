@@ -4,48 +4,35 @@
   padding: 0;
 }
 
-.app-container {
-  display: flex;
-  /* Flexbox container to align sidebar and main content */
+/* Main Content Area */
+.main {
+  margin-left: 250px; /* Default sidebar width */
+  padding: 10px;
+  flex-grow: 1;
+  overflow-y: auto;
   height: 100vh;
-  /* Full height of the viewport */
+  transition: margin-left 0.3s ease;
 }
 
-.Vuedatalogo {
-  height: 40px;
+.main.collapsed {
+  margin-left: 70px; /* Collapsed sidebar width */
 }
 
-.header-container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.sidebar {
+/* Sidebar Styles */
+.sidenav {
+  height: 100%;
   width: 250px;
-  /* Fixed width for the sidebar */
-  background-color: #f4f4f4;
-  /* Light grey background */
+  font-size: 17px;
   position: fixed;
-  /* Fixes the sidebar position */
+  z-index: 1;
   top: 0;
   left: 0;
-  height: 100%;
-  /* Full height of the viewport */
-  overflow-y: auto;
-  /* Scroll if content overflows */
+  background-color: #5782af;
+  overflow-x: hidden;
+  padding-top: 20px;
+  transition: width 0.3s ease;
 }
 
-.main {
-  margin-left: 250px;
-  /* Offset main content by the width of the sidebar */
-  padding: 10px;
-  /* Padding around the main content */
-  flex-grow: 1;
-  /* Takes up remaining space */
-  overflow-y: auto;
-  /* Scroll if content overflows */
-  height: 100vh;
-  /* Full height of the viewport */
-  box-sizing: border-box;
-  /* Include padding in width/height calculations */
+.sidenav.collapsed {
+  width: 70px; /* Collapsed width */
 }

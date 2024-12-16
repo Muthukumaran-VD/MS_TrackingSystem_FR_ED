@@ -1,3 +1,4 @@
+/* Sidebar Styles */
 .sidenav {
   height: 100%;
   width: 250px;
@@ -9,53 +10,64 @@
   background-color: #5782af;
   overflow-x: hidden;
   padding-top: 20px;
+  transition: width 0.3s ease;
+}
+
+.sidenav.collapsed {
+  width: 70px;
+}
+
+.logo {
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+.sidenav.collapsed .logo {
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .sidebar-names {
   margin-top: 40px;
 }
 
-.sidenav img {
-  max-width: 100%;
-  /* Ensures the logo fits within the sidebar */
-  height: auto;
-  /* Maintains aspect ratio */
-  display: block;
-  /* Centers the logo */
-  margin: 0 auto;
-  /* Centers the logo horizontally */
-}
-
 .sidenav a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
-  margin-bottom: 10%;
-  /* Adjusted font size for better visibility */
   color: whitesmoke;
-  /* Default text color */
   display: block;
-}
-
-.sidenav a:hover {
-  color: black;
-  /* Text color on hover */
 }
 
 .sidebar-link {
   display: flex;
   align-items: center;
+  margin-bottom: 20px;
+}
+
+.sidenav.collapsed .sidebar-link {
+  justify-content: center;
 }
 
 .sidebar-link .fa-icon {
   margin-right: 10px;
-  /* Space between icon and text */
 }
 
-.logo {
-  margin-left: 90px;
+.sidenav.collapsed .sidebar-link .fa-icon {
+  margin-right: 0;
 }
 
-/* Dropdown styles */
+.collapse-button {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: whitesmoke;
+  cursor: pointer;
+}
+
 .master-data {
   position: relative;
 }
@@ -73,46 +85,27 @@
   cursor: pointer;
 }
 
-.sidebar-links {
-  color: white;
-  margin-top: 5%;
-
-}
-
-.dropdown-btn:hover {
-  color: black;
-}
-
-.sidebar-links:hover{
-  color: black;
-}
-
-.dropdown-content {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  z-index: 1;
-}
-
-.dropdown-content a {
-  padding: 5px 10px;
-  text-decoration: none;
-  display: block;
-  color: white;
-}
-
-.arrow {
-  margin-left: 60px;
-  transition: transform 0.3s ease;
-  /* Smooth transition for rotating */
-}
-
-.arrow.open {
-  transform: rotate(180deg);
-  /* Rotate arrow when dropdown is open */
-}
 
 .dropdown-content {
   padding-left: 20px;
   display: block;
+}
+
+.arrow {
+  margin-left: 10px;
+  transition: transform 0.3s ease;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+.sidenav.collapsed .dropdown-content {
+  display: none;
+}
+
+.sidebar-link.active {
+  background-color: #f0f0f0; /* Highlight color */
+  font-weight: bold;
+  color: black;
 }
