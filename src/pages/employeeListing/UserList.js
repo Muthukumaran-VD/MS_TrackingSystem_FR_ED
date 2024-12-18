@@ -23,6 +23,7 @@ function UserList() {
             try {
                 const res = await fetch(`http://localhost:8000/users?page=${currentPage}&limit=${usersPerPage}&search=${encodeURIComponent(searchQuery)}`);
                 const data = await res.json();
+                console.log(data);
                 setUsers(data.users);
                 setTotalPages(data.totalPages);
             } catch (err) {

@@ -47,6 +47,7 @@ export const fetchUsers = async (page, limit, searchQuery) => {
     const response = await axios.get(`${BASE_URL}/users/getbgvemployee`, {
         params: { page, limit, search: searchQuery }
     });
+    console.log(response);
     return response.data;
 };
 

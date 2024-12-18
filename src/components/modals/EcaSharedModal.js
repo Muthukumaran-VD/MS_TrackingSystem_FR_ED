@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "../../assets/ecaFormimages/positionTypes/image.png"
 
 const EcaSharedModal = ({ user, onClose, onSubmit }) => {
     const [ecaForm, setEcaForm] = useState({
@@ -25,6 +26,31 @@ const EcaSharedModal = ({ user, onClose, onSubmit }) => {
         workedAs: '',
         formerAlias: ''
     });
+
+    const [showPositionImages, setShowPositionImages] = useState({
+        outsourced: false,
+        contractor: false,
+        businessGuest: false
+    });
+
+    const [showTitleImages, setShowTitleImages] = useState({
+        option1: false,
+        option2: false
+    });
+
+    const handleTogglePositionImage = (key) => {
+        setShowPositionImages((prev) => ({
+            ...prev,
+            [key]: !prev[key]
+        }));
+    };
+
+    const handleToggleTitleImage = (key) => {
+        setShowTitleImages((prev) => ({
+            ...prev,
+            [key]: !prev[key]
+        }));
+    };
 
     const handleEcaFormChange = (e) => {
         const { name, value } = e.target;
@@ -283,10 +309,50 @@ const EcaSharedModal = ({ user, onClose, onSubmit }) => {
                             </div>
                         </>
                     )}
+                    {/* Position Types Section */}
+                    <div className="form-section">
+                        <h4>Position Types</h4>
+                        <div className="position-type" onClick={() => handleTogglePositionImage('outsourced')}>
+                            <span>Outsourced Staff</span>
+                            {showPositionImages.outsourced && (
+                                <img src="../../assets/ecaFormimages/businessGuest/image.png" alt="Outsourced Staff" />
+                            )}
+                        </div>
+                        <div className="position-type" onClick={() => handleTogglePositionImage('contractor')}>
+                            <span>Contractor</span>
+                            {showPositionImages.contractor && (
+                                <img src="../../assets/ecaFormimages/contractor/image.png" alt="Contractor" />
+                            )}
+                        </div>
+                        <div className="position-type" onClick={() => handleTogglePositionImage('businessGuest')}>
+                            <span>Business Guest</span>
+                            {showPositionImages.businessGuest && (
+                                <img src="../../assets/ecaFormimages/positionTypes/image.png" alt="Business Guest" />
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Standard Title Options Section */}
+                    <div className="form-section">
+                        <h4>Standard Title Options</h4>
+                        <div className="standard-title" onClick={() => handleToggleTitleImage('option1')}>
+                            <span>Option 1</span>
+                            {showTitleImages.option1 && (
+                                <img src="../../assets/standardTitleOptions/image1.png" alt="Standard Title Option 1" />
+                            )}
+                        </div>
+                        <div className="standard-title" onClick={() => handleToggleTitleImage('option2')}>
+                            <span>Option 2</span>
+                            {showTitleImages.option2 && (
+                                <img src="../../assets/standardTitleOptions/image2.png" alt="Standard Title Option 2" />
+                            )}
+                        </div>
+                    </div>
+                    <br></br>
                     <div className="form-field submit-buttons">
                         <button
                             type="button"
-                            className="submit-button"
+                            className="submit-button-ecaForm"
                             onClick={handleEcaSharedSubmit}
                         >
                             Submit

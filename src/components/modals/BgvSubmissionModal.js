@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "../../pages/employeeList/UserListing.css";
 
 const BgvSubmissionModal = ({ user, onClose, onSubmit }) => {
     const [screenshot, setScreenshot] = useState(null);
@@ -22,7 +23,6 @@ const BgvSubmissionModal = ({ user, onClose, onSubmit }) => {
             <div className="modal-content">
                 <h3>Submit BGV Screenshot for {user?.Legal_Name}</h3>
                 <input type="file" onChange={handleFileChange} />
-                <br />
                 <input type="date" value={submissionDate} onChange={(e) => setSubmissionDate(e.target.value)} />
                 <br />
                 <button onClick={handleSubmit}>Submit</button>

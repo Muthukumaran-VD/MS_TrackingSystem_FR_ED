@@ -1,12 +1,12 @@
-// Imports and utility imports
 import React, { useState, useEffect } from 'react';
 import Pagination from '../../components/Pagination/Pagination';
 import StatusDropdown from '../../components/statusDropdown/StatusDropdown';
-import { fetchUsers, fetchStatuses, updateUserStatus, submitEcaDetails, submitBgvDetails, completeBgvDetails } from '../../apiService';
+import { fetchUsers, fetchStatuses, updateUserStatus, submitBgvDetails, submitEcaDetails, completeBgvDetails } from '../../apiService';
 import formatDate from '../../components/dateFormat/DateFormat';
 import './UserListing.css';
 
-// Separate component for Modals
+// New Import for BGV Initiated Modal
+import BgvInitiatedModal from '../../components/modals/BgvInitiatedModal';
 import BgvSubmissionModal from '../../components/modals/BgvSubmissionModal';
 import BgvCompletedModal from '../../components/modals/BgvCompletedModal';
 import EcaSharedModal from '../../components/modals/EcaSharedModal';
@@ -25,7 +25,8 @@ function UserListing() {
     const [modals, setModals] = useState({
         showBgvModal: false,
         showBgvCompletedModal: false,
-        showEcaSharedModal: false
+        showEcaSharedModal: false,
+        showBgvInitiatedModal: false // New state for BGV Initiated
     });
 
     const [selectedUser, setSelectedUser] = useState(null);
@@ -65,7 +66,8 @@ function UserListing() {
 
     const handleStatusUpdate = async (userId, newStatus) => {
         setSelectedUser(users.find(user => user.ID === userId));
-        if (newStatus === "BGV Submitted") setModals({ ...modals, showBgvModal: true });
+        if (newStatus === "BGV Initiated") setModals({ ...modals, showBgvInitiatedModal: true }); // Open BGV Initiated Modal
+        else if (newStatus === "BGV Submitted") setModals({ ...modals, showBgvModal: true });
         else if (newStatus === "BGV Completed") setModals({ ...modals, showBgvCompletedModal: true });
         else if (newStatus === "ECA Shared") setModals({ ...modals, showEcaSharedModal: true });
         else {
@@ -108,17 +110,17 @@ function UserListing() {
                 <table className="user-listing-table-content">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Resource Name</th>
-                            <th>Personal Email</th>
-                            <th>Project Title</th>
-                            <th>BGV Request Date</th>
-                            <th>Status</th>
+                            <th className="user-listing-table-header">ID</th>
+                            <th className="user-listing-table-header">Resource Name</th>
+                            <th className="user-listing-table-header">Personal Email</th>
+                            <th className="user-listing-table-header">Project Title</th>
+                            <th className="user-listing-table-header">BGV Request Date</th>
+                            <th className="user-listing-table-header">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {users.map((user) => (
-                            <tr key={user.ID}>
+                            <tr className='user-listing-table-row' key={user.ID}>
                                 <td>{user.ID}</td>
                                 <td>{user.Legal_Name}</td>
                                 <td>{user.VueData_Email}</td>
@@ -143,6 +145,20 @@ function UserListing() {
             />
 
             {/* Modal Components */}
+            {modals.showBgvInitiatedModal && (
+                <BgvInitiatedModal
+                    user={selectedUser}
+                    onClose={() => setModals({ ...modals, showBgvInitiatedModal: false })}
+                    onSubmit={async (formData) => {
+                        // Handle screenshot upload and submit logic
+                        // You can call your API to submit the data
+                        console.log('Form submitted with:', formData);
+                        setModals({ ...modals, showBgvInitiatedModal: false });
+                        updateUserLocalState(selectedUser.ID, "BGV Initiated");
+                    }}
+                />
+            )}
+
             {modals.showBgvModal && (
                 <BgvSubmissionModal
                     user={selectedUser}
