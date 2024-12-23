@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import "../../assets/ecaFormimages/positionTypes/image.png"
+import './EcaSharedModal.css'
+// import "../../assets/ecaFormimages/positionTypes/image.png"
 
 const EcaSharedModal = ({ user, onClose, onSubmit }) => {
     const [ecaForm, setEcaForm] = useState({

@@ -6,10 +6,15 @@ import formatDate from '../../components/dateFormat/DateFormat';
 import './UserListing.css';
 
 // New Import for BGV Initiated Modal
-import BgvInitiatedModal from '../../components/modals/BgvInitiatedModal';
-import BgvSubmissionModal from '../../components/modals/BgvSubmissionModal';
-import BgvCompletedModal from '../../components/modals/BgvCompletedModal';
-import EcaSharedModal from '../../components/modals/EcaSharedModal';
+import BgvInitiatedModal from '../../components/modals/bgvInitiatedModal/BgvInitiatedModal';
+import BgvSubmissionModal from '../../components/modals/bgvSubmissionModal/BgvSubmissionModal';
+import BgvCompletedModal from '../../components/modals/bgvCompletedModal/BgvCompletedModal';
+import EcaSharedModal from '../../components/modals/ecaSharedModal/EcaSharedModal';
+import EcaInitiatedModal from '../../components/modals/bgvInitiatedModal/BgvInitiatedModal'
+import ScocTrainingCompletedModal from '../../components/modals/scocTrainingCompletedModal/ScocTrainingCompletedModal';
+import ConfirmationModal from '../../components/modals/confirmationModal/ConfirmationModal';
+
+
 
 function UserListing() {
     // State management
@@ -21,13 +26,18 @@ function UserListing() {
     const [searchQuery, setSearchQuery] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
-    // Modal visibility and state
     const [modals, setModals] = useState({
         showBgvModal: false,
         showBgvCompletedModal: false,
         showEcaSharedModal: false,
-        showBgvInitiatedModal: false // New state for BGV Initiated
+        showBgvInitiatedModal: false,
+        showEcaInitiatedModal: false,
+        showScocTrainingModal: false,
+        showCredentialsModal: false, // New state for Credentials Received
+        showSetupSystemModal: false, // New state for Setup System
     });
+
+
 
     const [selectedUser, setSelectedUser] = useState(null);
 
@@ -66,11 +76,23 @@ function UserListing() {
 
     const handleStatusUpdate = async (userId, newStatus) => {
         setSelectedUser(users.find(user => user.ID === userId));
-        if (newStatus === "BGV Initiated") setModals({ ...modals, showBgvInitiatedModal: true }); // Open BGV Initiated Modal
-        else if (newStatus === "BGV Submitted") setModals({ ...modals, showBgvModal: true });
-        else if (newStatus === "BGV Completed") setModals({ ...modals, showBgvCompletedModal: true });
-        else if (newStatus === "ECA Shared") setModals({ ...modals, showEcaSharedModal: true });
-        else {
+        if (newStatus === "Credentials Recieved") {
+            setModals({ ...modals, showCredentialsModal: true });
+        } else if (newStatus === "Setup System") {
+            setModals({ ...modals, showSetupSystemModal: true });
+        } else if (newStatus === "SCOC Training Completed") {
+            setModals({ ...modals, showScocTrainingModal: true });
+        } else if (newStatus === "ECA Initiated") {
+            setModals({ ...modals, showEcaInitiatedModal: true });
+        } else if (newStatus === "BGV Initiated") {
+            setModals({ ...modals, showBgvInitiatedModal: true });
+        } else if (newStatus === "BGV Submitted") {
+            setModals({ ...modals, showBgvModal: true });
+        } else if (newStatus === "BGV Completed") {
+            setModals({ ...modals, showBgvCompletedModal: true });
+        } else if (newStatus === "ECA Shared") {
+            setModals({ ...modals, showEcaSharedModal: true });
+        } else {
             try {
                 const success = await updateUserStatus(userId, newStatus);
                 if (success) {
@@ -85,6 +107,8 @@ function UserListing() {
             }
         }
     };
+
+
 
     const updateUserLocalState = (userId, newStatus) => {
         setUsers(users.map(user =>
@@ -159,6 +183,47 @@ function UserListing() {
                 />
             )}
 
+            {/* Credentials Received Confirmation Modal */}
+            {modals.showCredentialsModal && (
+                <ConfirmationModal
+                    message="Are you sure you want to update the status to 'Credentials Received'?"
+                    onClose={() => setModals({ ...modals, showCredentialsModal: false })}
+                    onConfirm={async () => {
+                        try {
+                            const success = await updateUserStatus(selectedUser.ID, "Credentials Received");
+                            if (success) {
+                                updateUserLocalState(selectedUser.ID, "Credentials Received");
+                                setSuccessMessage('Status updated to "Credentials Received" successfully!');
+                            }
+                        } catch (error) {
+                            alert('An error occurred while updating the status.');
+                        }
+                        setModals({ ...modals, showCredentialsModal: false });
+                    }}
+                />
+            )}
+
+            {/* Setup System Confirmation Modal */}
+            {modals.showSetupSystemModal && (
+                <ConfirmationModal
+                    message="Are you sure you want to update the status to 'Setup System'?"
+                    onClose={() => setModals({ ...modals, showSetupSystemModal: false })}
+                    onConfirm={async () => {
+                        try {
+                            const success = await updateUserStatus(selectedUser.ID, "Setup System");
+                            if (success) {
+                                updateUserLocalState(selectedUser.ID, "Setup System");
+                                setSuccessMessage('Status updated to "Setup System" successfully!');
+                            }
+                        } catch (error) {
+                            alert('An error occurred while updating the status.');
+                        }
+                        setModals({ ...modals, showSetupSystemModal: false });
+                    }}
+                />
+            )}
+
+
             {modals.showBgvModal && (
                 <BgvSubmissionModal
                     user={selectedUser}
@@ -182,6 +247,32 @@ function UserListing() {
                     }}
                 />
             )}
+
+            {modals.showEcaInitiatedModal && (
+                <EcaInitiatedModal
+                    user={selectedUser}
+                    onClose={() => setModals({ ...modals, showEcaInitiatedModal: false })}
+                    onSubmit={async (formData) => {
+                        console.log('ECA Initiated Form Data:', formData);
+                        setModals({ ...modals, showEcaInitiatedModal: false });
+                        updateUserLocalState(selectedUser.ID, "ECA Initiated");
+                    }}
+                />
+            )}
+
+            {modals.showScocTrainingModal && (
+                <ScocTrainingCompletedModal
+                    user={selectedUser}
+                    onClose={() => setModals({ ...modals, showScocTrainingModal: false })}
+                    onSubmit={async (formData) => {
+                        console.log('SCOC Training Form Data:', formData);
+                        setModals({ ...modals, showScocTrainingModal: false });
+                        updateUserLocalState(selectedUser.ID, "SCOC Training Completed");
+                    }}
+                />
+            )}
+
+
 
             {modals.showEcaSharedModal && (
                 <EcaSharedModal

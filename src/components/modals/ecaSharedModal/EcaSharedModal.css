@@ -1,0 +1,176 @@
+/* ECA Form CSS */
+
+.eca-form-container {
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(3, 1fr); /* Three equal columns */
+    gap: 20px; /* Space between items */
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.eca-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 1400px;
+    /* Adjusted for more space */
+    height: 90vh;
+    overflow-y: auto;
+    /* Enable scrolling for long forms */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-button:hover {
+    color: #ff0000;
+}
+
+.eca-modal h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    width: 100%;
+}
+
+.eca-modal input,
+.eca-modal select {
+    font-size: 0.9rem;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.eca-modal select {
+    background: #fff;
+}
+
+.eca-modal .form-field p {
+    margin-bottom: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #555;
+}
+.position-type, .standard-title {
+    cursor: pointer;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.position-type img, .standard-title img {
+    margin-top: 5px;
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* Extraordinary CSS for Submit and Cancel Buttons */
+
+.form-field.submit-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between buttons */
+    margin-top: 20px;
+}
+
+.submit-button-ecaForm {
+    background: #4CAF50; /* Green background */
+    color: #fff;
+    border: none;
+    padding: 10px 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.submit-button-ecaForm:hover {
+    background: #45a049; /* Darker green on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.submit-button-ecaForm:active {
+    transform: translateY(0); /* Reset lift effect on click */
+}
+
+.cancel-button {
+    background: #f44336; 
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.cancel-button:hover {
+    background: #d32f2f; /* Darker red on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.cancel-button:active {
+    transform: translateY(0); /* Reset lift effect on click */
+}
+
+/* Form Field */
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Form Labels */
+.form-field p {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    margin: 0;
+}
+
+/* Input Fields */
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Input Hover/Focus Effects */
+.form-field input:focus,
+.form-field select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+    outline: none;
+}
+
+/* Date Inputs */
+.form-field input[type="date"] {
+    font-family: inherit;
+    color: #333;
+}

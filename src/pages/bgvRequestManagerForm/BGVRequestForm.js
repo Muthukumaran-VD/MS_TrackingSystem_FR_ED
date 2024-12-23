@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './BGVRequestForm.css';
-import axios from 'axios';
+import { fetchEmails, sendEmailData } from '../../apiService'; // Import API functions
 
 const BGVRequestForm = () => {
     const [mailTo, setMailTo] = useState('');
@@ -23,17 +23,13 @@ const BGVRequestForm = () => {
         teamProject: '',
         subGeo: '',
     });
-    
 
     // Fetch email IDs from the backend when the component mounts
     useEffect(() => {
         const fetchEmailIds = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/users/emails');
-                const data = response.data;
-                if (data && data.emails) {
-                    setEmailList(data.emails); // Assuming the response contains emails in a property called 'emails'
-                }
+                const emails = await fetchEmails(); // Use API service to fetch emails
+                setEmailList(emails);
             } catch (error) {
                 console.error('Failed to fetch email IDs', error);
             }
@@ -62,19 +58,8 @@ const BGVRequestForm = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:8000/users/send-email', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(emailData),
-            });
-
-            if (response.ok) {
-                alert('Email data sent successfully!');
-            } else {
-                throw new Error('Failed to send email data');
-            }
+            await sendEmailData(emailData); // Use API service to send email
+            alert('Email data sent successfully!');
         } catch (error) {
             alert('Failed to send email data.');
         } finally {
@@ -105,7 +90,7 @@ const BGVRequestForm = () => {
     return (
         <div>
             <div className="header">
-                <h2>BGV Request Form</h2>
+                <h2>BGV Request Form to Initiate BGV</h2>
             </div>
             <form onSubmit={handleMailSubmit} className="form-container">
                 <div className="column">
@@ -178,7 +163,7 @@ const BGVRequestForm = () => {
                             <option value="">Select an email</option>
                             {emailList.map((emailObj, index) => (
                                 <option key={index} value={emailObj.mailTo}>
-                                    {emailObj.mailTo} {/* Render the mailTo property here */}
+                                    {emailObj.mailTo}
                                 </option>
                             ))}
                         </select>
@@ -194,7 +179,7 @@ const BGVRequestForm = () => {
                             <option value="">Select a CC email</option>
                             {filteredEmailList.map((emailObj, index) => (
                                 <option key={index} value={emailObj.mailTo}>
-                                    {emailObj.mailTo} {/* Render the mailTo property here */}
+                                    {emailObj.mailTo}
                                 </option>
                             ))}
                         </select>

@@ -1,5 +1,5 @@
-// BgvInitiatedModal.js
 import React, { useState } from 'react';
+import './BgvInitiatedModal.css';
 
 function BgvInitiatedModal({ user, onClose, onSubmit }) {
     const [screenshot, setScreenshot] = useState(null);
@@ -20,20 +20,36 @@ function BgvInitiatedModal({ user, onClose, onSubmit }) {
         }
     };
 
+    // Get current date
+    const currentDate = new Date().toLocaleDateString();
+
     return (
         <div className="bgv-initiated-modal-overlay">
             <div className="bgv-initiated-modal">
                 <button className="bgv-initiated-modal-close" onClick={onClose}>X</button>
-                <h2>BGV Initiated - {user.Legal_Name}</h2>
+                <h2>BGV Initiated</h2>
                 <div className="bgv-initiated-modal-content">
-                    <p><strong>Resource Name:</strong> {user.Legal_Name}</p>
-                    <p><strong>Project Title:</strong> {user.Project}</p>
+                    <table className="bgv-details-table">
+                        <tbody>
+                            <tr>
+                                <th>Resource Name:</th>
+                                <td>{user.Legal_Name}</td>
+                            </tr>
+                            <tr>
+                                <th>Project Title:</th>
+                                <td>{user.Project}</td>
+                            </tr>
+                            <tr>
+                                <th>Date:</th>
+                                <td>{currentDate}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <form onSubmit={handleFormSubmit}>
                         <label>
                             Upload Screenshot:
                             <input type="file" accept="image/*" onChange={handleScreenshotChange} />
                         </label>
-                        <br></br>
                         <button type="submit">Submit</button>
                     </form>
                 </div>
