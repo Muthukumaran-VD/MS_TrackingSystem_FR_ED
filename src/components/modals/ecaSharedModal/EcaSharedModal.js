@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
-import './EcaSharedModal.css'
-// import "../../assets/ecaFormimages/positionTypes/image.png"
+import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
+import './EcaSharedModal.css';
+import { fetchEmails } from '../../../apiService';
+import businessGuestImage from '../../../assets/ecaFormimages/businessGuest/image.png';
+import contractorImage from '../../../assets/ecaFormimages/contractor/image.png';
+import businessGuestPositionImage from '../../../assets/ecaFormimages/positionTypes/image.png';
+import option1Image from '../../../assets/standardTitleOptions/image1.png';
+import option2Image from '../../../assets/standardTitleOptions/image2.png';
 
-const EcaSharedModal = ({ user, onClose, onSubmit }) => {
+const EcaSharedModal = ({ onClose, onSubmit }) => {
     const [ecaForm, setEcaForm] = useState({
         vendorAccountTemplate: '',
         physicalWorkLocation: '',
@@ -31,13 +37,60 @@ const EcaSharedModal = ({ user, onClose, onSubmit }) => {
     const [showPositionImages, setShowPositionImages] = useState({
         outsourced: false,
         contractor: false,
-        businessGuest: false
+        businessGuest: false,
     });
 
     const [showTitleImages, setShowTitleImages] = useState({
         option1: false,
-        option2: false
+        option2: false,
     });
+
+    const [emailOptions, setEmailOptions] = useState([]);
+    
+
+    // Fetch email IDs from the backend when the component mounts
+    useEffect(() => {
+        const fetchEmailIds = async () => {
+            try {
+                const emails = await fetchEmails(); // Assume fetchEmails is defined elsewhere
+                console.log(emails);
+
+                // Convert emails to react-select format
+                const formattedEmails = emails.map((email) => ({
+                    value: email.mailTo,
+                    label: email.mailTo,
+                }));
+                setEmailOptions(formattedEmails);
+            } catch (error) {
+                console.error('Failed to fetch email IDs', error);
+            }
+        };
+
+        fetchEmailIds();
+    }, []);
+
+    const handleEcaFormChange = (e) => {
+        const { name, value } = e.target;
+        setEcaForm((prevForm) => ({
+            ...prevForm,
+            [name]: value,
+        }));
+    };
+
+    const handleEmailChange = (selectedOptions, fieldName) => {
+        setEcaForm((prevForm) => ({
+            ...prevForm,
+            [fieldName]: selectedOptions ? selectedOptions.map(option => option.value) : [],
+        }));
+    };
+
+    const handleEcaSharedSubmit = () => {
+        if (!ecaForm.vendorAccountTemplate || !ecaForm.physicalWorkLocation) {
+            alert("Please complete all required fields.");
+            return;
+        }
+        onSubmit(ecaForm);
+    };
 
     const handleTogglePositionImage = (key) => {
         setShowPositionImages((prev) => ({
@@ -51,22 +104,6 @@ const EcaSharedModal = ({ user, onClose, onSubmit }) => {
             ...prev,
             [key]: !prev[key]
         }));
-    };
-
-    const handleEcaFormChange = (e) => {
-        const { name, value } = e.target;
-        setEcaForm((prevForm) => ({
-            ...prevForm,
-            [name]: value,
-        }));
-    };
-
-    const handleEcaSharedSubmit = () => {
-        if (!ecaForm.vendorAccountTemplate || !ecaForm.physicalWorkLocation) {
-            alert("Please complete all required fields.");
-            return;
-        }
-        onSubmit(ecaForm);
     };
 
     return (
@@ -222,26 +259,6 @@ const EcaSharedModal = ({ user, onClose, onSubmit }) => {
                         />
                     </div>
                     <div className="form-field">
-                        <p>To Mail</p>
-                        <input
-                            type="email"
-                            name="toMail"
-                            placeholder="To Mail"
-                            value={ecaForm.toMail}
-                            onChange={handleEcaFormChange}
-                        />
-                    </div>
-                    <div className="form-field">
-                        <p>CC Mail</p>
-                        <input
-                            type="email"
-                            name="ccMail"
-                            placeholder="CC Mail"
-                            value={ecaForm.ccMail}
-                            onChange={handleEcaFormChange}
-                        />
-                    </div>
-                    <div className="form-field">
                         <p>First/Given Legal Name</p>
                         <input
                             type="text"
@@ -310,46 +327,69 @@ const EcaSharedModal = ({ user, onClose, onSubmit }) => {
                             </div>
                         </>
                     )}
+
                     {/* Position Types Section */}
-                    <div className="form-section">
-                        <h4>Position Types</h4>
-                        <div className="position-type" onClick={() => handleTogglePositionImage('outsourced')}>
-                            <span>Outsourced Staff</span>
-                            {showPositionImages.outsourced && (
-                                <img src="../../assets/ecaFormimages/businessGuest/image.png" alt="Outsourced Staff" />
-                            )}
-                        </div>
-                        <div className="position-type" onClick={() => handleTogglePositionImage('contractor')}>
-                            <span>Contractor</span>
-                            {showPositionImages.contractor && (
-                                <img src="../../assets/ecaFormimages/contractor/image.png" alt="Contractor" />
-                            )}
-                        </div>
-                        <div className="position-type" onClick={() => handleTogglePositionImage('businessGuest')}>
-                            <span>Business Guest</span>
-                            {showPositionImages.businessGuest && (
-                                <img src="../../assets/ecaFormimages/positionTypes/image.png" alt="Business Guest" />
-                            )}
-                        </div>
+                    <h4>Position Types</h4>
+                    <div className="position-type" onClick={() => handleTogglePositionImage('outsourced')}>
+                        <span>Outsourced Staff</span>
+                        {showPositionImages.outsourced && (
+                            <img src={businessGuestImage} alt="Outsourced Staff" />
+                        )}
+                    </div>
+                    <div className="position-type" onClick={() => handleTogglePositionImage('contractor')}>
+                        <span>Contractor</span>
+                        {showPositionImages.contractor && (
+                            <img src={contractorImage} alt="Contractor" />
+                        )}
+                    </div>
+                    <div className="position-type" onClick={() => handleTogglePositionImage('businessGuest')}>
+                        <span>Business Guest</span>
+                        {showPositionImages.businessGuest && (
+                            <img src={businessGuestPositionImage} alt="Business Guest" />
+                        )}
                     </div>
 
                     {/* Standard Title Options Section */}
-                    <div className="form-section">
-                        <h4>Standard Title Options</h4>
-                        <div className="standard-title" onClick={() => handleToggleTitleImage('option1')}>
-                            <span>Option 1</span>
-                            {showTitleImages.option1 && (
-                                <img src="../../assets/standardTitleOptions/image1.png" alt="Standard Title Option 1" />
-                            )}
-                        </div>
-                        <div className="standard-title" onClick={() => handleToggleTitleImage('option2')}>
-                            <span>Option 2</span>
-                            {showTitleImages.option2 && (
-                                <img src="../../assets/standardTitleOptions/image2.png" alt="Standard Title Option 2" />
-                            )}
-                        </div>
+                    <h4>Standard Title Options</h4>
+                    <div className="standard-title" onClick={() => handleToggleTitleImage('option1')}>
+                        <span>Option 1</span>
+                        {showTitleImages.option1 && (
+                            <img src={option1Image} alt="Standard Title Option 1" />
+                        )}
                     </div>
-                    <br></br>
+                    <div className="standard-title" onClick={() => handleToggleTitleImage('option2')}>
+                        <span>Option 2</span>
+                        {showTitleImages.option2 && (
+                            <img src={option2Image} alt="Standard Title Option 2" />
+                        )}
+                    </div>
+
+                    {/* To Mail (Multiple Selection) */}
+                    <div className="form-field">
+                        <p>To Mail</p>
+                        <Select
+                            isMulti
+                            name="toMail"
+                            options={emailOptions}
+                            value={emailOptions.filter((email) => ecaForm.toMail.includes(email.value))}
+                            onChange={(selectedOptions) => handleEmailChange(selectedOptions, 'toMail')}
+                            placeholder="Select email addresses"
+                        />
+                    </div>
+
+                    {/* CC Mail (Multiple Selection) */}
+                    <div className="form-field">
+                        <p>CC Mail</p>
+                        <Select
+                            isMulti
+                            name="ccMail"
+                            options={emailOptions}
+                            value={emailOptions.filter((email) => ecaForm.ccMail.includes(email.value))}
+                            onChange={(selectedOptions) => handleEmailChange(selectedOptions, 'ccMail')}
+                            placeholder="Select email addresses"
+                        />
+                    </div>
+
                     <div className="form-field submit-buttons">
                         <button
                             type="button"

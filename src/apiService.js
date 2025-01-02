@@ -4,11 +4,12 @@ const BASE_URL = 'http://localhost:8000';
 
 export const submitBgvDetails = async (userId, formData) => {
     try {
-        const response = await fetch(`/api/update-bgv/${userId}`, {
-            method: 'POST',
-            body: formData,
+        const response = await axios.post(`/api/initiated-bgv/${userId}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // Indicate that we're sending a file
+            },
         });
-        return response.ok;
+        return response.status === 200;
     } catch (error) {
         console.error('Error submitting BGV details:', error);
         throw error;
@@ -17,11 +18,12 @@ export const submitBgvDetails = async (userId, formData) => {
 
 export const completeBgvDetails = async (userId, formData) => {
     try {
-        const response = await fetch(`/api/complete-bgv/${userId}`, {
-            method: 'POST',
-            body: formData,
+        const response = await axios.post(`/api/complete-bgv/${userId}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // Indicate that we're sending a file
+            },
         });
-        return response.ok;
+        return response.status === 200;
     } catch (error) {
         console.error('Error completing BGV details:', error);
         throw error;
@@ -30,35 +32,46 @@ export const completeBgvDetails = async (userId, formData) => {
 
 export const submitEcaDetails = async (userId, ecaForm) => {
     try {
-        const response = await fetch(`/api/eca-shared/${userId}`, {
-            method: 'POST',
+        const response = await axios.post(`/api/eca-shared/${userId}`, ecaForm, {
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(ecaForm),
         });
-        return response.ok;
+        return response.status === 200;
     } catch (error) {
         console.error('Error submitting ECA details:', error);
         throw error;
     }
 };
 
-
 export const fetchUsers = async (page, limit, searchQuery) => {
-    const response = await axios.get(`${BASE_URL}/users/getbgvemployee`, {
-        params: { page, limit, search: searchQuery }
-    });
-    console.log(response);
-    return response.data;
+    try {
+        const response = await axios.get(`${BASE_URL}/users/getbgvemployee`, {
+            params: { page, limit, search: searchQuery },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw error;
+    }
 };
 
 export const fetchStatuses = async () => {
-    const response = await axios.get(`${BASE_URL}/users/statuses`);
-    return response.data;
+    try {
+        const response = await axios.get(`${BASE_URL}/users/statuses`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching statuses:', error);
+        throw error;
+    }
 };
 
 export const updateUserStatus = async (userId, statusId) => {
-    const response = await axios.post(`${BASE_URL}/users/updatinguserstatus`, { userId, status: statusId });
-    return response.status === 200;
+    try {
+        const response = await axios.post(`${BASE_URL}/users/updatinguserstatus`, { userId, status: statusId });
+        return response.status === 200;
+    } catch (error) {
+        console.error('Error updating user status:', error);
+        throw error;
+    }
 };
 
 export const fetchEmails = async () => {
@@ -74,17 +87,12 @@ export const fetchEmails = async () => {
 // Send email data
 export const sendEmailData = async (emailData) => {
     try {
-        const response = await fetch(`${BASE_URL}/send-email`, {
-            method: 'POST',
+        const response = await axios.post(`${BASE_URL}/users/send-email`, emailData, {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(emailData),
         });
-        if (!response.ok) {
-            throw new Error('Failed to send email data');
-        }
-        return response;
+        return response.status === 200;
     } catch (error) {
         console.error('Error sending email data:', error);
         throw error;

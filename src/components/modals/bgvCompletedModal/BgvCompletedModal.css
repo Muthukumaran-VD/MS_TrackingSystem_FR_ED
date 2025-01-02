@@ -12,6 +12,11 @@
     z-index: 1000;
 }
 
+.bgvdocumentupload{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .bgv-modal {
     background-color: white;
     border-radius: 10px;

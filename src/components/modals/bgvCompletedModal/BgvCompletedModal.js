@@ -95,6 +95,7 @@ const BgvCompletedModal = ({ user, onClose, onSubmit }) => {
                         isMulti
                         placeholder="Select CC Emails (Optional)"
                     />
+                    <h4 className='bgvdocumentupload' >Upload the BGV document</h4>
                     <input
                         type="file"
                         className="bgv-modal-file-input"

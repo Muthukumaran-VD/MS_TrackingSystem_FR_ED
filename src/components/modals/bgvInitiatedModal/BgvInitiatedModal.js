@@ -1,8 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Select from 'react-select'; // Import react-select
 import './BgvInitiatedModal.css';
+import { fetchEmails, submitBgvDetails } from '../../../apiService';
 
 function BgvInitiatedModal({ user, onClose, onSubmit }) {
     const [screenshot, setScreenshot] = useState(null);
+    const [toEmails, setToEmails] = useState([]);
+    const [ccEmails, setCcEmails] = useState([]);
+    const [emailOptions, setEmailOptions] = useState([]);
+
+    // Fetch email IDs from the backend when the component mounts
+    useEffect(() => {
+        const fetchEmailIds = async () => {
+            try {
+                const emails = await fetchEmails();
+                console.log(emails);
+
+                // Convert emails to react-select format
+                const formattedEmails = emails.map((email) => ({
+                    value: email.mailTo,
+                    label: email.mailTo,
+                    ccValue: email.ccMail,
+                }));
+                setEmailOptions(formattedEmails);
+            } catch (error) {
+                console.error('Failed to fetch email IDs', error);
+            }
+        };
+
+        fetchEmailIds();
+    }, []);
 
     const handleScreenshotChange = (e) => {
         const file = e.target.files[0];
@@ -11,12 +38,36 @@ function BgvInitiatedModal({ user, onClose, onSubmit }) {
         }
     };
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
-        if (screenshot) {
-            onSubmit({ screenshot });
-        } else {
-            alert('Please upload a screenshot.');
+        if (!screenshot || toEmails.length === 0) {
+            alert('Please upload a screenshot and select at least one recipient.');
+            return;
+        }
+
+        // Extract selected email values
+        const selectedToEmails = toEmails.map((email) => email.value);
+        const selectedCcEmails = ccEmails.map((email) => email.value);
+
+        // Create FormData to send the file and other data
+        const formData = new FormData();
+        formData.append('screenshot', screenshot);
+        formData.append('toEmails', JSON.stringify(selectedToEmails));
+        formData.append('ccEmails', JSON.stringify(selectedCcEmails));
+        formData.append('name', user.Legal_Name);  // Adding user info if required
+        formData.append('project', user.Project);  // Adding project info if required
+
+        try {
+            // Call the backend API to submit the details
+            const isSuccess = await submitBgvDetails(user.userId, formData);
+            if (isSuccess) {
+                alert('BGV details submitted successfully');
+                onClose();  // Close modal after success
+            } else {
+                alert('Failed to submit BGV details');
+            }
+        } catch (error) {
+            alert('An error occurred while submitting BGV details');
         }
     };
 
@@ -26,7 +77,9 @@ function BgvInitiatedModal({ user, onClose, onSubmit }) {
     return (
         <div className="bgv-initiated-modal-overlay">
             <div className="bgv-initiated-modal">
-                <button className="bgv-initiated-modal-close" onClick={onClose}>X</button>
+                <button className="bgv-initiated-modal-close" onClick={onClose}>
+                    X
+                </button>
                 <h2>BGV Initiated</h2>
                 <div className="bgv-initiated-modal-content">
                     <table className="bgv-details-table">
@@ -46,10 +99,39 @@ function BgvInitiatedModal({ user, onClose, onSubmit }) {
                         </tbody>
                     </table>
                     <form onSubmit={handleFormSubmit}>
+                        {/* Upload Screenshot */}
                         <label>
                             Upload Screenshot:
                             <input type="file" accept="image/*" onChange={handleScreenshotChange} />
                         </label>
+
+                        {/* To Emails Multi-Select */}
+                        <div className="email-select">
+                            <label>To Emails:</label>
+                            <Select
+                                options={emailOptions}
+                                value={toEmails}
+                                onChange={setToEmails}
+                                isMulti
+                                placeholder="Select To Emails"
+                            />
+                        </div>
+
+                        {/* CC Emails Multi-Select */}
+                        <div className="email-select">
+                            <label>CC Emails:</label>
+                            <Select
+                                options={emailOptions.map((email) => ({
+                                    value: email.ccValue || email.value,
+                                    label: email.ccValue || email.label,
+                                }))}
+                                value={ccEmails}
+                                onChange={setCcEmails}
+                                isMulti
+                                placeholder="Select CC Emails (Optional)"
+                            />
+                        </div>
+
                         <button type="submit">Submit</button>
                     </form>
                 </div>
