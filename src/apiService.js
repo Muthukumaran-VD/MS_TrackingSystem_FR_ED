@@ -2,28 +2,38 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:8000';
 
-export const submitBgvDetails = async (userId, formData) => {
+export const submitBgvDetails = async (formData) => {
     try {
-        const response = await axios.post(`/api/initiated-bgv/${userId}`, formData, {
+        const {userId} = formData;
+        const response = await fetch(`${BASE_URL}/users/update-bgv/${userId}`, {
+            method: 'POST',
             headers: {
-                'Content-Type': 'multipart/form-data', // Indicate that we're sending a file
+                'Content-Type': 'application/json',  // Tell the server it's JSON data
             },
+            body: JSON.stringify(formData),
         });
-        return response.status === 200;
+
+        if (response.ok) {
+            console.log('BGV details submitted successfully');
+            return true;
+        } else {
+            console.error('Failed to submit BGV details');
+            return false;
+        }
     } catch (error) {
         console.error('Error submitting BGV details:', error);
         throw error;
     }
 };
 
+
 export const completeBgvDetails = async (userId, formData) => {
     try {
-        const response = await axios.post(`/api/complete-bgv/${userId}`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data', // Indicate that we're sending a file
-            },
+        const response = await fetch(`/api/complete-bgv/${userId}`, {
+            method: 'POST',
+            body: formData,
         });
-        return response.status === 200;
+        return response.ok;
     } catch (error) {
         console.error('Error completing BGV details:', error);
         throw error;
@@ -32,46 +42,46 @@ export const completeBgvDetails = async (userId, formData) => {
 
 export const submitEcaDetails = async (userId, ecaForm) => {
     try {
-        const response = await axios.post(`/api/eca-shared/${userId}`, ecaForm, {
+        const response = await fetch(`/api/eca-shared/${userId}`, {
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(ecaForm),
         });
-        return response.status === 200;
+        return response.ok;
     } catch (error) {
         console.error('Error submitting ECA details:', error);
         throw error;
     }
 };
 
+
 export const fetchUsers = async (page, limit, searchQuery) => {
-    try {
-        const response = await axios.get(`${BASE_URL}/users/getbgvemployee`, {
-            params: { page, limit, search: searchQuery },
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        throw error;
-    }
+    const response = await axios.get(`${BASE_URL}/users/getbgvemployee`, {
+        params: { page, limit, search: searchQuery }
+    });
+    console.log(response);
+    return response.data;
 };
 
 export const fetchStatuses = async () => {
-    try {
-        const response = await axios.get(`${BASE_URL}/users/statuses`);
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching statuses:', error);
-        throw error;
-    }
+    return [
+        { status_id: "ST001", name: "Requested Personal Details", role: "Manager" },
+        { status_id: "ST002", name: "Personal Details Shared", role: "Employee" },
+        { status_id: "ST003", name: "BGV Initiated", role: "Employee" },
+        { status_id: "ST004", name: "BGV Submitted", role: "HR" },
+        { status_id: "ST005", name: "BGV Completed", role: "HR" },
+        { status_id: "ST006", name: "ECA Shared", role: "Manager" },
+        { status_id: "ST007", name: "ECA Initiated", role: "Manager" },
+        { status_id: "ST008", name: "SCOC Training Completed", role: "Employee" },
+        { status_id: "ST009", name: "Credentials Recieved", role: "Employee" },
+        { status_id: "ST010", name: "Setup System", role: "Employee" },
+    ];
 };
 
+
 export const updateUserStatus = async (userId, statusId) => {
-    try {
-        const response = await axios.post(`${BASE_URL}/users/updatinguserstatus`, { userId, status: statusId });
-        return response.status === 200;
-    } catch (error) {
-        console.error('Error updating user status:', error);
-        throw error;
-    }
+    const response = await axios.post(`${BASE_URL}/users/updatinguserstatus`, { userId, status: statusId });
+    return response.status === 200;
 };
 
 export const fetchEmails = async () => {
@@ -87,12 +97,17 @@ export const fetchEmails = async () => {
 // Send email data
 export const sendEmailData = async (emailData) => {
     try {
-        const response = await axios.post(`${BASE_URL}/users/send-email`, emailData, {
+        const response = await fetch(`${BASE_URL}/send-email`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
+            body: JSON.stringify(emailData),
         });
-        return response.status === 200;
+        if (!response.ok) {
+            throw new Error('Failed to send email data');
+        }
+        return response;
     } catch (error) {
         console.error('Error sending email data:', error);
         throw error;

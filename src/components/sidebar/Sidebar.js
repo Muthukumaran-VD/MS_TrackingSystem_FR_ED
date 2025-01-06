@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom'; // Use NavLink for all links
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faFile, faCog, faCheckCircle, faMailBulk, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faFile, faCog, faMailBulk, faBars } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = ({ onCollapse }) => {
   const [isMasterDataOpen, setIsMasterDataOpen] = useState(false);
@@ -64,13 +64,6 @@ const Sidebar = ({ onCollapse }) => {
           </button>
           {isMasterDataOpen && !isCollapsed && (
             <div className="dropdown-content">
-              <NavLink
-                to="/employee-request-status"
-                className="sidebar-links"
-                activeClassName="active" // Apply active class for the Employee Request Status link
-              >
-                <FontAwesomeIcon icon={faCheckCircle} /> Employee Request Status
-              </NavLink>
               <NavLink
                 to="/adding-mail"
                 className="sidebar-links"

@@ -10,7 +10,6 @@ import SingleUserView from './pages/singleUserView/SingleUserView';
 import BGVRequestEmployeeForm from './pages/bgvEmployeeForm/BGVEmployeeForm';
 // import SignUp from './pages/signup/Signup';
 // import Login from './pages/login/Login';
-import EmployeeRequestStatus from './pages/masterdata/employeeStatusupdating/EmployeeStatusUpdating';
 import UserListing from './pages/employeeList/UserListing';
 import AddingMail from './pages/masterdata/maildCrud/AddingMailId';
 import Vdlogo from '../src/assets/images/VD.png';
@@ -48,7 +47,6 @@ function App() {
             <Route path="/bgv-employeeform/:id" element={<BGVRequestEmployeeForm />} />
             <Route path="/adding-mail" element={<AddingMail />} />
             <Route path="/user-listing" element={<UserListing />} />
-            <Route path="/employee-request-status" element={<EmployeeRequestStatus />} />
           </Routes>
         </div>
       </div>

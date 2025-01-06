@@ -35,11 +35,14 @@ function BgvInitiatedModal({ user, onClose, onSubmit }) {
         const file = e.target.files[0];
         if (file) {
             setScreenshot(file);
+            console.log('Screenshot file:', file);
         }
     };
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate if screenshot and ToEmails are selected
         if (!screenshot || toEmails.length === 0) {
             alert('Please upload a screenshot and select at least one recipient.');
             return;
@@ -49,17 +52,19 @@ function BgvInitiatedModal({ user, onClose, onSubmit }) {
         const selectedToEmails = toEmails.map((email) => email.value);
         const selectedCcEmails = ccEmails.map((email) => email.value);
 
-        // Create FormData to send the file and other data
-        const formData = new FormData();
-        formData.append('screenshot', screenshot);
-        formData.append('toEmails', JSON.stringify(selectedToEmails));
-        formData.append('ccEmails', JSON.stringify(selectedCcEmails));
-        formData.append('name', user.Legal_Name);  // Adding user info if required
-        formData.append('project', user.Project);  // Adding project info if required
+        // Construct form data
+        const newFormData = {
+            screenshot: screenshot,
+            toEmails: selectedToEmails,
+            ccEmails: selectedCcEmails,
+            name: user.Legal_Name,
+            project: user.Project,
+            userId: user.ID,
+            status: "BGV Initiated"
+        };
 
         try {
-            // Call the backend API to submit the details
-            const isSuccess = await submitBgvDetails(user.userId, formData);
+            const isSuccess = await submitBgvDetails(newFormData);
             if (isSuccess) {
                 alert('BGV details submitted successfully');
                 onClose();  // Close modal after success
@@ -67,6 +72,7 @@ function BgvInitiatedModal({ user, onClose, onSubmit }) {
                 alert('Failed to submit BGV details');
             }
         } catch (error) {
+            console.error('Error while submitting BGV details:', error);
             alert('An error occurred while submitting BGV details');
         }
     };
@@ -122,7 +128,7 @@ function BgvInitiatedModal({ user, onClose, onSubmit }) {
                             <label>CC Emails:</label>
                             <Select
                                 options={emailOptions.map((email) => ({
-                                    value: email.ccValue || email.value,
+                                    value: email.ccValue || email.value,  // Ensure it defaults to 'value' if 'ccValue' is missing
                                     label: email.ccValue || email.label,
                                 }))}
                                 value={ccEmails}
