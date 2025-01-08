@@ -34,19 +34,35 @@ const EcaSharedModal = ({ onClose, onSubmit }) => {
         formerAlias: ''
     });
 
-    const [showPositionImages, setShowPositionImages] = useState({
-        outsourced: false,
-        contractor: false,
-        businessGuest: false,
-    });
+    const [showImageOverlay, setShowImageOverlay] = useState(false);
+    const [selectedImage, setSelectedImage] = useState("");
 
-    const [showTitleImages, setShowTitleImages] = useState({
-        option1: false,
-        option2: false,
-    });
+    const handleTogglePositionImage = (type) => {
+        const images = {
+            "Outsourced Staff": businessGuestImage, // Replace with actual image paths
+            "Contractor": contractorImage,
+            "Business Guest": businessGuestPositionImage,
+        };
+        setSelectedImage(images[type]);
+        setShowImageOverlay(true);
+    };
+
+    const handleToggleTitleImage = (option) => {
+        const images = {
+            "Option 1": option1Image, // Replace with actual image paths
+            "Option 2": option2Image,
+        };
+        setSelectedImage(images[option]);
+        setShowImageOverlay(true);
+    };
+
+    const handleCloseImage = () => {
+        setShowImageOverlay(false);
+        setSelectedImage("");
+    };
 
     const [emailOptions, setEmailOptions] = useState([]);
-    
+
 
     // Fetch email IDs from the backend when the component mounts
     useEffect(() => {
@@ -84,26 +100,25 @@ const EcaSharedModal = ({ onClose, onSubmit }) => {
         }));
     };
 
-    const handleEcaSharedSubmit = () => {
-        if (!ecaForm.vendorAccountTemplate || !ecaForm.physicalWorkLocation) {
-            alert("Please complete all required fields.");
-            return;
+const handleEcaSharedSubmit = () => {
+    if (!ecaForm.vendorAccountTemplate || !ecaForm.physicalWorkLocation) {
+        alert("Please complete all required fields.");
+        return;
+    }
+    
+    // Log the entire form data to the console
+    console.log("Form Data Submitted:", ecaForm);
+    
+    onSubmit(ecaForm); // Call the onSubmit handler
+};
+
+
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            console.log("Uploaded file:", file);
+            // Handle file storage or API calls here
         }
-        onSubmit(ecaForm);
-    };
-
-    const handleTogglePositionImage = (key) => {
-        setShowPositionImages((prev) => ({
-            ...prev,
-            [key]: !prev[key]
-        }));
-    };
-
-    const handleToggleTitleImage = (key) => {
-        setShowTitleImages((prev) => ({
-            ...prev,
-            [key]: !prev[key]
-        }));
     };
 
     return (
@@ -327,44 +342,57 @@ const EcaSharedModal = ({ onClose, onSubmit }) => {
                             </div>
                         </>
                     )}
+                    <div className='eca-form-contain'>
+                        <div className="eca-form-container1">
+                            {/* Position Types */}
+                            <div className='eca-heading'>Position Types</div>
+                            {["Outsourced Staff", "Contractor", "Business Guest"].map((type, index) => (
+                                <div
+                                    className="clickable-item"
+                                    key={index}
+                                    onClick={() => handleTogglePositionImage(type)}
+                                >
+                                    {type}
+                                </div>
+                            ))}
 
-                    {/* Position Types Section */}
-                    <h4>Position Types</h4>
-                    <div className="position-type" onClick={() => handleTogglePositionImage('outsourced')}>
-                        <span>Outsourced Staff</span>
-                        {showPositionImages.outsourced && (
-                            <img src={businessGuestImage} alt="Outsourced Staff" />
-                        )}
+                            {/* Standard Title Options */}
+                            <div className='eca-heading'>Standard Title Options</div>
+                            {["Option 1", "Option 2"].map((option, index) => (
+                                <div
+                                    className="clickable-item"
+                                    key={index}
+                                    onClick={() => handleToggleTitleImage(option)}
+                                >
+                                    {option}
+                                </div>
+                            ))}
+                            {/* Image Overlay */}
+                            {showImageOverlay && (
+                                <div className="image-overlay">
+                                    <div className="overlay-content">
+                                        <img src={selectedImage} alt="Overlay" />
+                                        <button className="close-overlay" onClick={handleCloseImage}>
+                                            X
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                    <div className="position-type" onClick={() => handleTogglePositionImage('contractor')}>
-                        <span>Contractor</span>
-                        {showPositionImages.contractor && (
-                            <img src={contractorImage} alt="Contractor" />
-                        )}
-                    </div>
-                    <div className="position-type" onClick={() => handleTogglePositionImage('businessGuest')}>
-                        <span>Business Guest</span>
-                        {showPositionImages.businessGuest && (
-                            <img src={businessGuestPositionImage} alt="Business Guest" />
-                        )}
+                    <div className="form-field">
+                        <p>Upload Background Check PDF</p>
+                        <input
+                            type="file"
+                            name="backgroundCheckPdf"
+                            accept=".pdf"
+                            onChange={handleFileUpload} // You can implement this function to handle file upload
+                        />
                     </div>
 
-                    {/* Standard Title Options Section */}
-                    <h4>Standard Title Options</h4>
-                    <div className="standard-title" onClick={() => handleToggleTitleImage('option1')}>
-                        <span>Option 1</span>
-                        {showTitleImages.option1 && (
-                            <img src={option1Image} alt="Standard Title Option 1" />
-                        )}
-                    </div>
-                    <div className="standard-title" onClick={() => handleToggleTitleImage('option2')}>
-                        <span>Option 2</span>
-                        {showTitleImages.option2 && (
-                            <img src={option2Image} alt="Standard Title Option 2" />
-                        )}
-                    </div>
 
                     {/* To Mail (Multiple Selection) */}
+                    <div>
                     <div className="form-field">
                         <p>To Mail</p>
                         <Select
@@ -388,7 +416,7 @@ const EcaSharedModal = ({ onClose, onSubmit }) => {
                             onChange={(selectedOptions) => handleEmailChange(selectedOptions, 'ccMail')}
                             placeholder="Select email addresses"
                         />
-                    </div>
+                    </div></div>
 
                     <div className="form-field submit-buttons">
                         <button

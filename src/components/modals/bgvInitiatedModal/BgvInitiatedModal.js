@@ -4,7 +4,7 @@ import './BgvInitiatedModal.css';
 import { fetchEmails, submitBgvDetails } from '../../../apiService';
 
 function BgvInitiatedModal({ user, onClose, onSubmit }) {
-    const [screenshot, setScreenshot] = useState(null);
+    const [document, setScreenshot] = useState(null);
     const [toEmails, setToEmails] = useState([]);
     const [ccEmails, setCcEmails] = useState([]);
     const [emailOptions, setEmailOptions] = useState([]);
@@ -41,28 +41,28 @@ function BgvInitiatedModal({ user, onClose, onSubmit }) {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-
+    
         // Validate if screenshot and ToEmails are selected
-        if (!screenshot || toEmails.length === 0) {
+        if (!document || toEmails.length === 0) {
             alert('Please upload a screenshot and select at least one recipient.');
             return;
         }
-
+    
         // Extract selected email values
         const selectedToEmails = toEmails.map((email) => email.value);
         const selectedCcEmails = ccEmails.map((email) => email.value);
-
-        // Construct form data
+    
+        // Construct form data for FormData object
         const newFormData = {
-            screenshot: screenshot,
+            document: document,
             toEmails: selectedToEmails,
             ccEmails: selectedCcEmails,
             name: user.Legal_Name,
             project: user.Project,
             userId: user.ID,
-            status: "BGV Initiated"
+            status: "BGV Initiated",
+            statusUpdatingDate: currentDate, // Include current date
         };
-
         try {
             const isSuccess = await submitBgvDetails(newFormData);
             if (isSuccess) {
@@ -76,6 +76,7 @@ function BgvInitiatedModal({ user, onClose, onSubmit }) {
             alert('An error occurred while submitting BGV details');
         }
     };
+    
 
     // Get current date
     const currentDate = new Date().toLocaleDateString();

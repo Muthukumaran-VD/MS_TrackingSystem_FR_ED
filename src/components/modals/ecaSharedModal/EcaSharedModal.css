@@ -1,177 +1,206 @@
-/* ECA Form CSS */
-
-.eca-form-container {
-    display: grid; /* Use grid layout */
-    grid-template-columns: repeat(3, 1fr); /* Three equal columns */
-    gap: 20px; /* Space between items */
-    padding: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
+/* Modal background and content styling */
 .eca-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 1400px;
-    /* Adjusted for more space */
-    height: 90vh;
-    overflow-y: auto;
-    /* Enable scrolling for long forms */
-}
-
-.close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #333;
-}
-
-.close-button:hover {
-    color: #ff0000;
-}
-
-.eca-modal h3 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-    text-align: center;
-    width: 100%;
-}
-
-.eca-modal input,
-.eca-modal select {
-    font-size: 0.9rem;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.eca-modal select {
-    background: #fff;
-}
-
-.eca-modal .form-field p {
-    margin-bottom: 5px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #555;
-}
-.position-type, .standard-title {
-    cursor: pointer;
-    margin-bottom: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.position-type img, .standard-title img {
-    margin-top: 5px;
-    width: 100px;
-    height: auto;
-    border-radius: 5px;
-}
-
-/* Extraordinary CSS for Submit and Cancel Buttons */
-
-.form-field.submit-buttons {
     display: flex;
     justify-content: center;
-    gap: 20px; /* Space between buttons */
-    margin-top: 20px;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    z-index: 999;
 }
 
-.submit-button-ecaForm {
-    background: #4CAF50; /* Green background */
-    color: #fff;
-    border: none;
-    padding: 10px 10px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+.eca-modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    max-height: 90%;
+    width: 80%;
+    max-width: 1200px;
+    position: relative;
+    overflow-y: auto; /* Enable scrolling */
 }
 
-.submit-button-ecaForm:hover {
-    background: #45a049; /* Darker green on hover */
-    transform: translateY(-2px); /* Slight lift effect */
+/* Form container styling with grid layout */
+.eca-form-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding-right: 10px;
+    overflow-y: auto;
 }
 
-.submit-button-ecaForm:active {
-    transform: translateY(0); /* Reset lift effect on click */
-}
-
-.cancel-button {
-    background: #f44336; 
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-}
-
-.cancel-button:hover {
-    background: #d32f2f; /* Darker red on hover */
-    transform: translateY(-2px); /* Slight lift effect */
-}
-
-.cancel-button:active {
-    transform: translateY(0); /* Reset lift effect on click */
-}
-
-/* Form Field */
+/* Styling for form fields */
 .form-field {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
 }
 
-/* Form Labels */
 .form-field p {
-    font-size: 14px;
-    font-weight: 500;
-    color: #555;
-    margin: 0;
-}
-
-/* Input Fields */
-.form-field input,
-.form-field select {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Input Hover/Focus Effects */
-.form-field input:focus,
-.form-field select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
-    outline: none;
-}
-
-/* Date Inputs */
-.form-field input[type="date"] {
-    font-family: inherit;
+    font-weight: bold;
     color: #333;
 }
 
+input[type="text"],
+input[type="date"],
+input[type="email"],
+select,
+textarea {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    background-color: #f9f9f9;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+/* Styling for the buttons */
+.submit-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.submit-button-ecaForm,
+.cancel-button {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.submit-button-ecaForm {
+    background-color: #28a745;
+    color: white;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* For clickable items inside eca-form-container1 */
+
+.eca-form-contain{
+    grid-column: span 3; /* Make the Position Types section span the full width */
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    
+}
+.eca-form-container1 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.clickable-item {
+    cursor: pointer;
+    padding: 8px;
+    margin: 5px 0;
+    background-color: #e7e7e7;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.clickable-item:hover {
+    background-color: #dcdcdc;
+}
+
+/* Image overlay styling */
+.image-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay-content {
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.overlay-content img {
+    max-width: 100%;
+    max-height: 400px;
+}
+
+.close-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff0000;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+/* Modal title styling */
+.eca-heading {
+    color: #333;
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold ;
+}
+
+/* File input and other custom input styles */
+input[type="file"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+input[type="file"]:focus {
+    border-color: #007BFF;
+}
+
+/* Modal close button */
+.close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    font-size: 30px;
+    color: #333;
+    cursor: pointer;
+}
+
+
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+    .eca-form-container {
+        grid-template-columns: 1fr; /* Stacks the form fields in one column */
+    }
+
+    .select-mail {
+        grid-column: span 1; /* Emails section takes full width */
+    }
+
+    .eca-form-container1 {
+        grid-column: span 1; /* Position types section takes full width */
+    }
+}

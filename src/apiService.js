@@ -4,27 +4,33 @@ const BASE_URL = 'http://localhost:8000';
 
 export const submitBgvDetails = async (formData) => {
     try {
-        const {userId} = formData;
+        const { userId, document, toEmails, ccEmails, project, status, statusUpdatingDate } = formData;
+
+        const formDataToSend = new FormData();
+        formDataToSend.append('userId', userId);
+        formDataToSend.append('toEmails', JSON.stringify(toEmails));
+        formDataToSend.append('ccEmails', JSON.stringify(ccEmails));
+        formDataToSend.append('project', project);
+        formDataToSend.append('status', status);
+        formDataToSend.append('statusUpdatingDate', statusUpdatingDate);
+
+        if (document) {
+            formDataToSend.append('document', document); // Correct field name
+        }
+
         const response = await fetch(`${BASE_URL}/users/update-bgv/${userId}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',  // Tell the server it's JSON data
-            },
-            body: JSON.stringify(formData),
+            body: formDataToSend,
         });
 
-        if (response.ok) {
-            console.log('BGV details submitted successfully');
-            return true;
-        } else {
-            console.error('Failed to submit BGV details');
-            return false;
-        }
+        return response.ok;
     } catch (error) {
         console.error('Error submitting BGV details:', error);
         throw error;
     }
 };
+
+
 
 
 export const completeBgvDetails = async (userId, formData) => {
@@ -53,6 +59,7 @@ export const submitEcaDetails = async (userId, ecaForm) => {
         throw error;
     }
 };
+
 
 
 export const fetchUsers = async (page, limit, searchQuery) => {

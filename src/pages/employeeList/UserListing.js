@@ -272,8 +272,6 @@ function UserListing() {
                 />
             )}
 
-
-
             {modals.showEcaSharedModal && (
                 <EcaSharedModal
                     user={selectedUser}

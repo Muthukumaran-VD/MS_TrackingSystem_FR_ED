@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select'; // Import react-select
 import "./BgvSubmissionModal.css";
-import { fetchEmails } from '../../../apiService';
+import { fetchEmails, submitBgvDetails } from '../../../apiService';
 
 const BgvSubmissionModal = ({ user, onClose, onSubmit }) => {
-    const [screenshot, setScreenshot] = useState(null);
+    const [document, setDocument] = useState(null);
     const [submissionDate, setSubmissionDate] = useState(new Date().toISOString().slice(0, 10));
     const [toEmails, setToEmails] = useState([]);
     const [ccEmails, setCcEmails] = useState([]);
@@ -32,24 +32,46 @@ const BgvSubmissionModal = ({ user, onClose, onSubmit }) => {
         fetchEmailIds();
     }, []);
 
-    const handleFileChange = (e) => setScreenshot(e.target.files[0]);
+    const handleFileChange = (e) => setDocument(e.target.files[0]);
 
-    const handleSubmit = () => {
-        if (!screenshot) {
-            alert("Please upload a screenshot.");
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+
+        // Validate if screenshot and ToEmails are selected
+        if (!document || toEmails.length === 0) {
+            alert('Please upload a screenshot and select at least one recipient.');
             return;
         }
 
+        // Extract selected email values
         const selectedToEmails = toEmails.map((email) => email.value);
         const selectedCcEmails = ccEmails.map((email) => email.value);
-
-        const formData = new FormData();
-        formData.append('screenshot', screenshot);
-        formData.append('submissionDate', submissionDate);
-        formData.append('toEmails', selectedToEmails);
-        formData.append('ccEmails', selectedCcEmails);
-        onSubmit(formData);
+        // Get current date
+        const currentDate = new Date().toLocaleDateString();
+        // Construct form data for FormData object
+        const newFormData = {
+            document: document,
+            toEmails: selectedToEmails,
+            ccEmails: selectedCcEmails,
+            project: user.Project,
+            userId: user.ID,
+            status: "BGV Submitted",
+            statusUpdatingDate: currentDate, // Include current date
+        };
+        try {
+            const isSuccess = await submitBgvDetails(newFormData);
+            if (isSuccess) {
+                alert('BGV details submitted successfully');
+                onClose();  // Close modal after success
+            } else {
+                alert('Failed to submit BGV details');
+            }
+        } catch (error) {
+            console.error('Error while submitting BGV details:', error);
+            alert('An error occurred while submitting BGV details');
+        }
     };
+
 
     return (
         <div className="modal-overlay">
@@ -57,7 +79,7 @@ const BgvSubmissionModal = ({ user, onClose, onSubmit }) => {
                 <button className="intu-button" onClick={onClose}>X</button>
                 <div className="modal-body">
                     <h3>Submit BGV Screenshot for {user?.Legal_Name}</h3>
-                    
+
                     {/* Upload Screenshot */}
                     <label>Upload Screenshot:</label>
                     <input type="file" onChange={handleFileChange} />
@@ -90,7 +112,7 @@ const BgvSubmissionModal = ({ user, onClose, onSubmit }) => {
                     />
                 </div>
                 <div className="modal-footer">
-                    <button className="submit-button" onClick={handleSubmit}>Submit</button>
+                    <button className="submit-button" onClick={handleFormSubmit}>Submit</button>
                 </div>
             </div>
         </div>
